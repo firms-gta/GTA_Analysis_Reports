@@ -1,0 +1,28 @@
+---
+title: "FIRMS Global Tuna Atlas: Data checks"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+---
+  
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      fig.cap = TRUE, 
+                      tab.cap.style = "Table Caption", 
+                      tab.cap.pre = "Tab. ",
+                      tab.cap.sep = ". ", 
+                      fig.cap.style = "Image Caption", 
+                      fig.cap.pre = "Fig. ", 
+                      fig.cap.sep = ". "
+                      )
+```
+
+```{r child = '00_TOC_DOCX.Rmd'}
+```
+
+```{r child = '01_INTRODUCTION_DOCX.Rmd'}
+```
+
+```{r child = '02_MATERIALS_DOCX.Rmd'}
+```
+
+```{r child = '03_01_RESULTS_MISLOCATION_DOCX.Rmd'}
+```

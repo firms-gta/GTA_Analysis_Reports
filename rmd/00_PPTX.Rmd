@@ -1,0 +1,576 @@
+---
+title: "Review of the statistical data available for bigeye tuna (1950-2021)"
+subtitle: "24^th^ IOTC Working Party on Tropical Tunas - 24-29 October 2022"
+author: "[IOTC Secretariat](mailto:IOTC-Secretariat@fao.org)"
+---
+  
+```{r general_options, echo = FALSE}
+knitr::opts_chunk$set(echo = FALSE, tidy.opts = list(width.cutoff = 60), tidy = TRUE, size = "small", fig.width = 12, fig.height = 6.75)
+#knit_hooks$set(inline = function(x) {prettyNum(x, big.mark = ",")})
+```
+
+```{r echo = FALSE}
+LAST_YEAR = ly(NC_ALL_EST$YEAR)
+
+last_all_trop = sum(NC_TROP_EST[YEAR == LAST_YEAR]$CATCH)
+last_bet      = sum(NC_SP[YEAR == LAST_YEAR & SPECIES_CODE == "BET"]$CATCH)
+
+last_bet_perc = r_to(last_bet * 100 / last_all_trop, 1)
+
+quality_all  = QUALITY_SCORES[, .(CATCH = sum(CATCH, na.rm = TRUE)), keyby = .(YEAR)]
+quality_nc_good = QUALITY_SCORES[NC %in% c(0, 2), .(GOOD = sum(CATCH, na.rm = TRUE)), keyby = .(YEAR)]
+quality_ce_good = QUALITY_SCORES[CE %in% c(0, 2), .(GOOD = sum(CATCH, na.rm = TRUE)), keyby = .(YEAR)]
+quality_sf_good = QUALITY_SCORES[SF %in% c(0, 2), .(GOOD = sum(CATCH, na.rm = TRUE)), keyby = .(YEAR)]
+
+quality_nc = merge(quality_all, quality_nc_good)[, GOOD_PERC := round(GOOD * 100 / CATCH, 0)]
+quality_ce = merge(quality_all, quality_ce_good)[, GOOD_PERC := round(GOOD * 100 / CATCH, 0)]
+quality_sf = merge(quality_all, quality_sf_good)[, GOOD_PERC := round(GOOD * 100 / CATCH, 0)]
+
+```
+
+# Purpose
+
+To provide participants at the 24^th^ Session of the IOTC Working Party on Tropical Tunas (WPTT24) with a review of the status of the information of bigeye tuna (_Thunnus obesus_) for the years 1950-2021 available to the IOTC Secretariat as of October 2022.
+
+---
+
+# Context (statistical year `r LAST_YEAR`)
+
+- 16 IOTC species: ~`r pn(r_to(last_all_IOTC, 1e4))` t
+- 3 tropical tuna species: ~`r pn(r_to(last_all_trop, 1e4))` t (~`r last_all_trop_perc`% of all IOTC species)
+- [**Bigeye tuna**](https://www.iotc.org/sites/default/files/documents/science/species_summaries/english/2_Bigeye2021E.pdf): ~`r pn(r_to(last_bet, 1e3))` t (~`r last_bet_perc`% of all tropical species)
+    + Stock **not overfished** but [**subject to overfishing**]{.underline}
+
+---
+
+# Bigeye tuna / Patudo
+
+![_Thunnus obesus_](./BET.png)
+
+---
+
+# Stock assessment areas
+
+```{r fig.cap = "Bigeye tuna assessment areas"}
+include_graphics("../../outputs/charts/NC/BET/area/SA_AREA.png")
+```
+
+---
+
+# Overall species trends
+
+- Trends across t-RFMOs
+- Trends in the Indian Ocean, by:
+    + Fishery group
+    + Fishery
+    + Fishery type
+    + Assessment area
+    + Catches on FOB-associated schools
+
+---
+
+# Trends across t-RFMOs
+
+```{r fig.cap = "Annual time series of cumulative nominal absolute (a) and relative (b) catches by RFMO"}
+include_graphics("../../outputs/charts/GTA/NC_GTA_BET_BARPLOT_RFMO_COMBINED.png")
+```
+
+---
+
+# Trends in the Indian Ocean (tropical species)
+
+```{r fig.cap = "Annual time series of cumulative nominal absolute (a) and relative (b) catches by tropical species"}
+include_graphics('../../outputs/charts/NC/TROP/species/TROP_BARPLOT_COMBINED.png')
+```
+
+---
+
+# Trends in the Indian Ocean (tropical species)
+
+```{r fig.cap = paste0("Average proportion of tropical tuna species over the years ", Y1, "-", YL)}
+include_graphics('../../outputs/charts/NC/TROP/species/TROP_TREEMAP_SPECIES_LP.png')
+```
+
+---
+
+# Trends in the Indian Ocean - by fishery group
+
+```{r fig.cap = "Annual time series of nominal catches by fishery group"}
+include_graphics('../../outputs/charts/NC/BET/fishery_group/LINECHART_YEARLY.png')
+```
+
+---
+
+# Trends in the Indian Ocean - by fishery
+
+```{r fig.cap = "Annual time series of cumulative nominal absolute (a) and relative (b) catches by fishery group"}
+include_graphics("../../outputs/charts/NC/BET/fishery/BARCHART_RAISED_YEARLY_COMBINED.png")
+```
+
+---
+
+# Trends in the Indian Ocean - by fishery type
+
+```{r fig.cap = "Annual time series of cumulative nominal absolute (a) and relative (b) catches by type of fishery"}
+include_graphics("../../outputs/charts/NC/BET/fishery_type/BARCHART_YEARLY_COMBINED.png")
+```
+
+---
+
+# Trends in the Indian Ocean - by assessment area
+
+```{r fig.cap = "Annual time series of cumulative nominal absolute (a) and relative (b) catches by assessment area"}
+include_graphics("../../outputs/charts/NC/BET/area/BARCHART_RAISED_SA_AREAS_COMBINED.png")
+```
+
+---
+
+# Trends in catches on FOB-associated schools
+
+```{r fig.cap = "Annual percentages of FOB-associated catches by purse seine fleet"}
+include_graphics("../../outputs/charts/NC/BET/fishery/LINECHART_PROPORTION_PS_FS_LS.png")
+```
+
+---
+
+# Recent fishery features (`r paste0(Y1, "-", YL)`)
+
+- Trends by:
+    + Fleet and fishery
+    + Fishery group
+    + Fishery group and fleet
+    + Purse seine fishing mode
+- Summary by fishery group
+- Changes between WPTT24(DP) and WPTT24
+
+---
+
+# Trends by fleet and fishery
+
+```{r fig.cap = "Mean annual catches by fleet and fishery"}
+include_graphics('../../outputs/charts/NC/BET/fleet/PARETO_FLEET_FISHERIES.png')
+```
+
+---
+
+# Trends by fishery group
+
+```{r fig.cap = "Annual catch trends by fishery group"}
+include_graphics("../../outputs/charts/NC/BET/fishery_group/BARCHART_TRENDS_ALL.png")
+```
+
+---
+
+# Trends by fishery group and fleet
+
+```{r fig.cap = "Annual catch trends by fishery group and fleet"}
+include_graphics("../../outputs/charts/NC/BET/fishery_group/BARCHART_TRENDS_wide.png")
+```
+
+---
+
+# Trends by purse seine fishing mode
+
+```{r fig.cap = "Annual trends of catches by purse seine fleet and fishing mode: (a) free swimming, (b) FOB-associated schools"}
+include_graphics("../../outputs/charts/NC/BET/fishery/BARCHART_TRENDS_PS.png")
+```
+
+---
+
+# Summary of fishery trends by fishery group
+
+### Industrial purse seines
+
+  - Catches generally stable in the last five years
+  - Recent peak identified in 2021 (**SYC** and **EU,France** LS)
+  - Highly variable trends in catches on free-school
+  - Free-school peak identified for **EU,Spain** in 2021
+  
+### Industrial longlines
+
+  - Decrease in catches until 2018, increasing until 2020 (deep freezing LL from **TWN**, **SYC**, **JPN**, **CHN**)
+  - Decrease in catches from 2017 for all other LL types (fresh, swordfish)
+
+---
+
+# Summary of fishery trends by fishery group
+
+### Artisanal line fisheries
+
+  - Trends similar to those identified for LL fisheries
+  - All major contributors in a phase of slight contraction
+  - 
+  
+### All other artisanal fisheries
+  
+  - Generally stable trends since 2017
+  - Marked decrease in catches from **IRN** gillnets from 2018
+  - **IDN** catch levels (gillnet and liftnet) decreased after peak in 2020
+
+---
+
+# Changes between WPTT24(DP) and WPTT24
+
+```{r fig.cap = "Differences in nominal catches between the WPTT24(DP) (May 2022) and WPTT24 (October 2022)"}
+include_graphics('../../outputs/charts/NC/BET/deltas/BARCHART_PREV_CURRENT.png')
+```
+
+---
+
+# Uncertainties in nominal catch data
+
+- Reporting quality
+- Summary of reporting quality
+
+---
+
+# Reporting quality - NC
+
+```{r fig.cap = "Annual nominal catches by quality score (barplot) and percentage of nominal catch fully/partially reported to the IOTC Secretariat for all fisheries (a) and by type of fishery (b)"}
+include_graphics('../../outputs/charts/NC/BET/quality/COMBINED.png')
+```
+
+---
+
+# Summary of reporting quality - NC
+
+
+- _Generally_ increasing trend in quality levels from 2010 (`r quality_nc[YEAR == 2010]$GOOD_PERC`%) to 2018 (`r quality_nc[YEAR == 2018]$GOOD_PERC`%), with a slight decrease from 2020 (`r quality_nc[YEAR == 2020]$GOOD_PERC`%, CoViD effect?)
+- Quality driven by _industrial_ fisheries
+- Estimations performed for **_NEI_** and **IDN** fleets
+- Implementation of PSM contributed to Improvements in reporting
+- Reporting issues for several **coastal fisheries** 
+    + **MDG**, **MOZ**, **TZA**, **IDN**: estimated by the Secretariat in recent years
+    + **SOM**, **YEM**, **ERI**: complete lack of reporting
+-	**PS** fishery of **EU,Spain**: species composition in 2018
+- **PS** fishery of **Seychelles**: similar issues potentially detected for 2021
+
+---
+
+# Discard levels
+
+- Size-distribution of discards for:
+    + Industrial purse seines (ROS)
+    + Industrial longlines (ROS)
+
+---
+
+# Discards data for industrial PS (ROS)
+
+```{r fig.cap = paste0("Fork length distribution of individuals discarded at sea in purse seine fisheries, ", fy(SF_ROS_FL_PS_DI_YEARS), "-", ly(SF_ROS_FL_PS_DI_YEARS), " (n = ", pn(SF_ROS_FL_PS_DI), ")")}
+include_graphics("../../outputs/charts/ROS/BET/BARCHART_SF_PS_DISCARDS.png")
+```
+
+---
+
+# Discards data for industrial LL (ROS)
+
+```{r fig.cap = paste0("Fork length distribution of individuals discarded at sea in longline fisheries, ", fy(SF_ROS_FL_LL_DI_YEARS), "-", ly(SF_ROS_FL_LL_DI_YEARS), " (n = ", pn(SF_ROS_FL_LL_DI), ")")}
+include_graphics("../../outputs/charts/ROS/BET/BARCHART_SF_LL_DISCARDS.png")
+```
+
+---
+
+# Georeferenced catch-and-effort data
+
+- By decade (1950-2009)
+- By last years (`r paste0(Y1, "-", YL)`) and decade
+
+---
+
+# By decade (1950-2009)
+
+```{r fig.cap = "Average annual catches by decade, 5x5 grid and fishery (1950-2009)"}
+include_graphics("../../outputs/charts/CA/BET/fishery/RAISED_PIEMAP_DECADES_wide.png")
+```
+
+---
+
+# Last years (`r paste0(Y1, "-", YL)`) and decade
+
+```{r fig.cap = paste0("Annual catches by last years (", Y1, "-", YL, ") and decade (annual average 2010-2019), 5x5 grid and fishery ")}
+include_graphics("../../outputs/charts/CA/BET/fishery/RAISED_PIEMAP_YEARS_wide.png")
+```
+
+---
+
+# Uncertainties in catch-and-effort data
+
+- Reporting quality
+- Summary of reporting quality
+
+---
+
+# Reporting quality - CE
+
+```{r fig.cap = "Annual nominal catches estimated by quality score (barplot) of the georeferenced catch-and-effort data fully/partially reported to the IOTC Secretariat (lines with dots) for all fisheries (a) and by type of fishery (b)"}
+include_graphics('../../outputs/charts/CA/BET/quality/COMBINED.png')
+```
+
+---
+
+# Summary of reporting quality - CE
+
+- _Generally_ increasing trend in quality levels from 2010 (`r quality_ce[YEAR == 2010]$GOOD_PERC`%) to 2021 (`r quality_ce[YEAR == 2021]$GOOD_PERC`%), with a decrease in 2020 (`r quality_ce[YEAR == 2020]$GOOD_PERC`%, CoViD effect?)
+- Marked differences in quality levels between _industrial_ and _artisanal_ fisheries until 2018
+- Poor data for **IRN** PS and **LKA** FLL 
+- Recent improvements in reporting from **IRN** and **IDN** coastal fisheries, although coverage still not satisfactory
+
+---
+
+# Summary of reporting quality - CE (continued)
+
+- Information missing for several important artisanal fisheries:
+    + **COM** 2018-2020
+    + **IDN** prior to 2018
+    + **EU,Réunion** TROL from 2013
+- Information also missing or incomplete for some industrial fisheries: 
+    + **EU,Italy** PS 
+    + **TWN** FLL until 2006
+  
+---
+
+# Georeferenced size-frequency data
+
+- Industrial PS fisheries
+- Industrial LL fisheries
+- Temporal trends in estimated average weights
+- Uncertainties in size-frequency data
+
+---
+
+# Industrial purse seine fisheries
+
+```{r fig.cap = "Size distribution (FL, cm) of individuals caught by EU and assimilated PS fleets, by year and fishing mode"}
+include_graphics('../../outputs/charts/SF/BET/fishery/distribution/RIDGEPLOT_PS_ALL.png')
+```
+
+---
+
+# Industrial purse seine fisheries by fleet (main)
+
+```{r fig.cap = "Size distribution (FL, cm) of individuals caught by the major PS fleets, by fleet, year and fishing mode"}
+include_graphics('../../outputs/charts/SF/BET/fishery/distribution/FACETED_MAIN_PS_FS_LS.png')
+```
+
+---
+
+# Industrial purse seine fisheries by fleet (other)
+
+```{r fig.cap = "Size distribution (FL, cm) of individuals caught by all other PS fleets, by fleet and year"}
+include_graphics('../../outputs/charts/SF/BET/fishery/distribution/FACETED_OTHER_PS.png')
+```
+
+---
+
+# Industrial longline fisheries (main)
+
+```{r echo = FALSE}
+SF_LL_MIN_Y = min(SPECIES_SF_LL[FISHERY_CODE == "LLD"]$YEAR)
+SF_LL_MAX_Y = max(SPECIES_SF_LL[FISHERY_CODE == "LLD"]$YEAR)
+```
+
+```{r fig.cap = "Size distribution (FL, cm) of individuals caught by the LL fleets of JPN and TWN, by fleet and year"}
+include_graphics('../../outputs/charts/SF/BET/fishery/distribution/RIDGEPLOT_LL_FLEET_MAIN.png')
+```
+
+---
+
+# Industrial longline fisheries (other)
+
+```{r fig.cap = "Size distribution (FL, cm) of individuals caught by the all other longline fleets, by fleet and year"}
+include_graphics('../../outputs/charts/SF/BET/fishery/distribution/RIDGEPLOT_LL_FLEET_OTHER_wide.png')
+```
+
+---
+
+# Temporal trends in estimated average weights
+
+```{r fig.cap = "Combined estimated average weights (kg/fish) by fishery and year"}
+include_graphics('../../outputs/charts/SF/BET/fishery/average_weight/LINEPLOT_COMBINED.png')
+```
+
+---
+
+# Temporal trends in estimated average weights
+
+```{r fig.cap = "Estimated average weights (kg/fish) by fishery and year"}
+include_graphics('../../outputs/charts/SF/BET/fishery/average_weight/LINEPLOT_FACETED_WIDE.png')
+```
+
+---
+
+# Uncertainties in size-frequency data
+
+- Reporting quality
+- Summary of reporting quality
+- Coverage levels by fishery
+    + Deep-freezing LL
+    + Fresh tuna LL
+    + Swordfish LL
+    + Coastal longline
+    + Handline
+    + Gillnet
+- Inconsistencies across sources 
+
+---
+
+# Reporting quality - SF
+
+```{r fig.cap = "Annual nominal catches estimated by quality score (barplot) of the georeferenced size-frequency data fully/partially reported to the IOTC Secretariat (lines with dots) for all fisheries (a) and by type of fishery (b)"}
+include_graphics('../../outputs/charts/SF/BET/quality/COMBINED.png')
+```
+
+---
+
+# Summary of reporting quality - SF
+
+- _Generally_ increasing trend in quality levels from 2010 (`r quality_sf[YEAR == 2010]$GOOD_PERC`%) to 2021 (`r quality_sf[YEAR == 2021]$GOOD_PERC`%), with a marked decrease in 2020 (`r quality_sf[YEAR == 2020]$GOOD_PERC`%, CoViD effect?)
+- Contribution from artisanal catch extremely poor until 2015
+- Data for industrial PS includes a mix of _raw_ and _raised_ data
+- Very high proportions of small individuals in PS FS for:
+    + **EU,Spain** (2019), **EU,France** (2018, 2021), **MUS** (2017), **SYC** (2018, 2019)
+- Complete lack of PS data for:
+    + **EU,Italy** (2018+), **EU,Spain** (2019), **Mauritius** (2018+)
+- Potential inconsistencies between logbook and observer data (**TWN** and **JPN** LL)
+
+---
+
+# Coverage levels - deep-freezing LL
+
+```{r fig.cap = ""}
+include_graphics('../../outputs/charts/SF/BET/fishery/coverage/BARPLOT_LL_FACETED.png' )
+```
+
+---
+
+# Coverage levels - fresh tuna LL
+
+```{r fig.cap = ""}
+include_graphics('../../outputs/charts/SF/BET/fishery/coverage/BARPLOT_FLL_FACETED.png' )
+```
+
+---
+
+# Coverage levels - swordfish LL
+
+```{r fig.cap = ""}
+include_graphics('../../outputs/charts/SF/BET/fishery/coverage/BARPLOT_ELL_FACETED.png' )
+```
+
+---
+
+# Coverage levels - coastal longline
+
+```{r fig.cap = ""}
+include_graphics('../../outputs/charts/SF/BET/fishery/coverage/BARPLOT_LLCO_FACETED.png' )
+```
+
+---
+
+# Coverage levels - handline
+
+```{r fig.cap = ""}
+include_graphics('../../outputs/charts/SF/BET/fishery/coverage/BARPLOT_HAND_FACETED.png' )
+```
+
+---
+
+# Coverage levels - gillnet
+
+```{r fig.cap = ""}
+include_graphics('../../outputs/charts/SF/BET/fishery/coverage/BARPLOT_GILL_FACETED.png' )
+```
+
+---
+
+# Inconsistencies across sources
+
+- C-E vs. S-F 
+    + Taiwan,China (deep-freezing LL)
+- Logbook vs.observers 
+    + Taiwan,China (deep-freezing LL)
+    + Japan  (deep-freezing LL)
+
+---
+
+# Taiwan,China - CE vs. SF
+
+```{r fig.cap = "Difference in average weights of individuals caught by the deep-freezing fleet of Taiwan,China as calculated from the available size-frequency and catch-and-effort data"}
+include_graphics('../../outputs/charts/SF/BET/fishery/uncertainties/AVG_WEIGHT_DIFF_LL_TWN.png')
+```
+
+---
+
+# Taiwan,China - CE vs. SF (by area)
+
+```{r fig.cap = "Difference in average weights of individuals caught by the deep-freezing longline fleet of Taiwan,China, by assessment area, as calculated from the available size-frequency and catch-and-effort data"}
+include_graphics('../../outputs/charts/SF/BET/fishery/uncertainties/AVG_WEIGHT_DIFF_LL_TWN_FACETED.png')
+```
+
+---
+
+# Taiwan,China - logbooks vs. observers
+
+```{r fig.cap = "Differences in size distribution of individuals recorded on logbooks or through observers by the deep-freezing longline fleet of Taiwan,China, by five years period and assessment area"}
+include_graphics('../../outputs/charts/SF/BET/fishery/uncertainties/LINEPLOT_DIFF_TWN_LL_LLOB.png')
+```
+
+---
+
+# Japan - logbooks vs. observers
+
+```{r fig.cap = "Differences in size distribution of individuals recorded on logbooks or through observers by the deep-freezing longline fleet of Japan, by five years period and assessment area"}
+include_graphics('../../outputs/charts/SF/BET/fishery/uncertainties/LINEPLOT_DIFF_JPN_LL_LLOB.png')
+```
+
+---
+
+# Taiwan,China vs. Japan - logbooks
+
+```{r fig.cap = "Differences in size distribution of individuals recorded on logbooks by the deep-freezing longline fleets of Taiwan,China and Japan, by five years period and assessment area"}
+include_graphics('../../outputs/charts/SF/BET/fishery/uncertainties/LINEPLOT_DIFF_LL_JPN_TWN.png')
+```
+
+---
+
+# Taiwan,China vs. Japan - observers
+
+```{r fig.cap = "Differences in size distribution of individuals recorded through observers by the deep-freezing longline fleets of Taiwan,China and Japan, by five years period and assessment area"}
+include_graphics('../../outputs/charts/SF/BET/fishery/uncertainties/LINEPLOT_DIFF_LLOB_JPN_TWN.png')
+```
+
+---
+
+# Summary of inconsistencies across sources
+
+- Data from logbooks is available for both fleets only in the 2000s
+    + In agreement in areas A1, A3 and A0 during the early 2000s
+    + **JPN** logbooks report a higher % of smaller fish in all areas in the late 2000s
+    
+- Data from observers is available for both fleets from 2010 onwards
+    + In agreement in areas A0, A2 and A3 during the early 2010s
+    + In agreement in areas A1 and A3 during the late 2010s
+    + Elsewhere, **JPN** observers report a higher % of smaller fish in all areas
+    
+---
+
+# Summary of inconsistencies across sources
+
+- Comparable data from **TWN** logbooks and observers in:
+    + Area A3 in the early 2000s
+    + Area A2 in the late 2000s
+    + Areas A0, A2 and A3 in the 2010s
+    + Areas A2 and A3 in the 2020s
+    + When in disagreement, observer data report a higher % of smaller fish
+    
+---
+
+# Summary of inconsistencies across sources
+
+- Sources for **JPN** cannot be compared as they're both available only for area A0 in the early 2010s
+    
+- Data from **JPN** observers is available mostly for:
+    + Areas A2 and A3 in the 2010s
+    + Areas A0 and A1 in the 2010s (low no. samples)
+    + Area A3 in the 2020s (low no. samples)
