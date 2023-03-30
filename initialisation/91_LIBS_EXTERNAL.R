@@ -5,24 +5,33 @@ if(!require(pacman)){
   suppressPackageStartupMessages(library(pacman,quietly = TRUE))
 }
 
-pacman::p_load("tidyverse", 
-               "sf", 
-               "raster", 
-               "rnaturalearth", 
-               "cmocean", 
-               "magrittr", 
-               "DBI", 
+renv::restore()
+
+
+pacman::p_load("tidyverse",
+               "sf",
+               "raster",
+               "rnaturalearth",
+               "cmocean",
+               "magrittr",
+               "DBI",
                "ows4R", # https://github.com/eblondel/ows4R
-               "openxlsx", 
-               "data.table", 
-               "ggsci", 
-               "colorspace", 
+               "openxlsx",
+               "data.table",
+               "ggsci",
+               "colorspace",
                "flextable",
-               "officer", 
-               "patchwork")
+               "officer",
+               "patchwork",
+               "ggplot2",
+               "dotenv",
+               "here", 
+               "renv", 
+               "RPostgreSQL", update=FALSE)
 
 # Addition for plotting the Pacific-centred maps
-load(url("https://github.com/valentinitnelav/RandomScripts/blob/master/NaturalEarth.RData?raw=true"))
+base::load(url("https://github.com/valentinitnelav/RandomScripts/blob/master/NaturalEarth.RData?raw=true"))
+
 
 # Set chart theme to theme_bw
 theme_set(theme_bw())
