@@ -1,6 +1,6 @@
 # Clears the environment
 rm(list = ls())
-
+require(here)
 withr::with_dir(here("initialisation"),{
 
 # Includes defaults and helper functions
