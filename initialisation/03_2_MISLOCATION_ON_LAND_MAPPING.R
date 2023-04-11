@@ -34,7 +34,7 @@ CA_PS_BB_11M_ON_LAND_NUMBERS_MAP =
 
 CA_PS_BB_11M_ON_LAND_MAP = CA_PS_BB_11M_ON_LAND_TONNES_MAP / CA_PS_BB_11M_ON_LAND_NUMBERS_MAP 
 
-ggsave("../outputs/charts/mislocation/CA_PS_BB_11M_ON_LAND_MAP.png", CA_PS_BB_11M_ON_LAND_MAP, width = 8, height = 7)
+ggsave(paste0(here(),"outputs/charts/mislocation/CA_PS_BB_11M_ON_LAND_MAP.png", CA_PS_BB_11M_ON_LAND_MAP, width = 8, height = 7))
 
 # Map the 5x5 catch data on land ####
 CA_55M_ON_LAND_GRID_UNIT_WKT = CA_55M_ON_LAND[, .(CATCH = sum(value, na.rm = TRUE)), keyby = .(GRID = geographic_identifier, UNIT = unit, WKT = geom_wkt)]
@@ -71,7 +71,7 @@ CA_55M_ON_LAND_NUMBERS_MAP =
 
 CA_55M_ON_LAND_MAP = CA_55M_ON_LAND_TONNES_MAP / CA_55M_ON_LAND_NUMBERS_MAP 
 
-ggsave("../outputs/charts/mislocation/CA_55M_ON_LAND_MAP.png", CA_55M_ON_LAND_MAP, width = 8, height = 7)
+ggsave(paste0(here(),"outputs/charts/mislocation/CA_55M_ON_LAND_MAP.png", CA_55M_ON_LAND_MAP, width = 8, height = 7))
 
 # ROBINSON PACIFIC-CENTRED PROJECTION ####
 sf::sf_use_s2(FALSE)
@@ -108,4 +108,4 @@ CA_55M_ON_LAND_NUMBERS_MAP_PAC =
 
 CA_55M_ON_LAND_MAP_PAC = CA_55M_ON_LAND_TONNES_MAP_PAC / CA_55M_ON_LAND_NUMBERS_MAP_PAC 
 
-ggsave("../outputs/charts/mislocation/CA_55M_ON_LAND_MAP_PAC.png", CA_55M_ON_LAND_MAP_PAC, width = 8, height = 7)
+ggsave(paste0(here(),"outputs/charts/mislocation/CA_55M_ON_LAND_MAP_PAC.png"), CA_55M_ON_LAND_MAP_PAC, width = 8, height = 7)
