@@ -6,6 +6,7 @@
 
 Some of the geo-referenced catches available from IATTC, ICCAT, and IOTC are located on land (**Table \@ref(tab:MislocationLandCAPSBB11MTable)** and **Fig. \@ref(fig:barplot)**).
 
+
 ```{r tab.cap = "Summary of total catch from the purse seine and baitboat geo-referenced catch data set by month and 1°x1° grid area that are associated with grid squares located on land", tab.id = "MislocationLandCAPSBB11MTable"}
 CA_PS_BB_11M_ON_LAND_RFMO_UNIT_FT = 
   CA_PS_BB_11M_ON_LAND_RFMO_UNIT %>%
@@ -24,7 +25,7 @@ CA_PS_BB_11M_ON_LAND_RFMO_UNIT_FT
 ```
 
 ```{r MislocationLandCA_PS_BB_11MMap, fig.cap = "Distribution of catches from the geo-referenced catch data set by month and 1°x1° grid area. (a) catches reported in metric tonnes; (b) catches reported in numbers of fish", fig.id = "barplot"}
-include_graphics("../outputs/charts/mislocation/CA_PS_BB_11M_ON_LAND_MAP.png")
+include_graphics(paste0(here(),"/outputs/charts/mislocation/CA_PS_BB_11M_ON_LAND_MAP.png"))
 ```
 
 ### Geo-referenced catch data set by month and 5°x5° grid area
@@ -47,7 +48,7 @@ CA_55M_ON_LAND_RFMO_UNIT_FT
 ```
 
 ```{r MislocationLandCA_55MMap, fig.cap = "Distribution of catches from the geo-referenced catch data set by month and 5°x5° grid area. (a) catches reported in metric tonnes; (b) catches reported in numbers of fish", fig.id = "barplot"}
-include_graphics("../outputs/charts/mislocation/CA_55M_ON_LAND_MAP_PAC.png")
+include_graphics(paste0(here(),"outputs/charts/mislocation/CA_55M_ON_LAND_MAP_PAC.png"))
 ```
 
 ### Geo-referenced catch data set by month and grid area
