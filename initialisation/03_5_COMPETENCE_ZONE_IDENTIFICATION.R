@@ -2,7 +2,7 @@ print("Initialisation of overlapping zones area and grids")
 
 
 
-# Checking all the square being in overlapping zone 
+# Checking all the square being in overlapping zone and setting all the shapes
 require(sf)
 query_area <- paste0("SELECT * FROM area.rfmos_convention_areas_fao")
 COMPETENCE_AREA <- st_make_valid(st_read(con_GTA, query = query_area)) %>% filter(!st_is_empty(.))
