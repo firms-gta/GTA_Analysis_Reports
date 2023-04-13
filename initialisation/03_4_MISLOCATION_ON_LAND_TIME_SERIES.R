@@ -1,4 +1,4 @@
-
+print("Time series for mislocated data")
 
 
 
@@ -49,6 +49,6 @@ time_series_mislocated_by_trfmo <- lapply(list(CA_ON_LAND), function(x){
 })
 
 ggsave(paste0(here(),"/outputs/charts/mislocation/time_series_mislocated_by_trfmo.png" ), time_series_mislocated_by_trfmo[[1]], width = 8, height = 7)
-  
 
 
+print("Time series for mislocated data finished!")
