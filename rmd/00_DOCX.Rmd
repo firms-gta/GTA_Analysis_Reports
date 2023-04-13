@@ -1,6 +1,7 @@
 ---
 title: "FIRMS Global Tuna Atlas: Data checks"
 date: "`r format(Sys.time(), '%d %B %Y')`"
+toc: true
 ---
   
 ```{r setup, include = FALSE}
