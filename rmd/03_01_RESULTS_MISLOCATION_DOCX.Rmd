@@ -48,8 +48,81 @@ CA_55M_ON_LAND_RFMO_UNIT_FT
 ```
 
 ```{r MislocationLandCA_55MMap, fig.cap = "Distribution of catches from the geo-referenced catch data set by month and 5°x5° grid area. (a) catches reported in metric tonnes; (b) catches reported in numbers of fish", fig.id = "barplot"}
-include_graphics(paste0(here(),"outputs/charts/mislocation/CA_55M_ON_LAND_MAP_PAC.png"))
+include_graphics(paste0(here(),"/outputs/charts/mislocation/CA_55M_ON_LAND_MAP_PAC.png"))
 ```
 
-### Geo-referenced catch data set by month and grid area
 
+### Geo-referenced catch data set by time series
+
+#### Geo-referenced catch data set by month 
+
+```{r timeseriesmislocated, fig.cap = "Time series of catches from the geo-referenced catch data located on land set by month", fig.id = "timeseriesmislocated"}
+include_graphics(paste0(here(),"/outputs/charts/mislocation/time_series_mislocated.png"))
+```
+
+
+```{r timeseriesmislocatedbytrfmos, fig.cap = "Time series of catches from the geo-referenced catch data located on land set by month and tRFMOs", fig.id = "timeseriesmislocatedbytrfmos"}
+
+include_graphics(paste0(here(),"/outputs/charts/mislocation/time_series_mislocated_by_trfmo.png"))
+
+```
+
+### Repartition of factors for data on land
+
+```{r}
+
+list_files <- as.list(list.files(here("outputs/charts/mislocation/pie_plot_factors")))
+
+list_names <- as.list(toupper( gsub("_","",gsub("_repartition_pie_plot.png","",list_files))))
+
+```
+
+
+
+```{r}
+resume_knit_child = function(x){
+
+  knitr::knit_child(text = c(
+    '',
+    '```{r}',
+    'name <- toupper( gsub("_","",gsub("_repartition_pie_plot.png","",x)))',
+    '',
+    '```',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '```{r results = "asis", fig.cap = paste0("Distribution in value for the dimension : ",name)}',
+    'include_graphics(paste0(here("outputs/charts/mislocation/pie_plot_factors/", x)))',
+    '',
+    '',
+    '```',
+    '',
+    '',
+    ''
+
+
+
+
+  ), envir = environment(), quiet= TRUE)
+}
+
+
+```
+
+```{r results='asis'}
+
+t <- lapply(list_files, resume_knit_child)
+
+```
+
+```{r results='asis'}
+
+cat(unlist(t), sep ="\\clearpage")
+
+```
+
+
+## Catches outside juridiction zone {-}
