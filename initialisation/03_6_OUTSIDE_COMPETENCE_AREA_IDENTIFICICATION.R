@@ -23,15 +23,18 @@ SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA <- CWP_GRIDS_WITHOUT_COMPETENCE_AREA_ON_OCE
 # list(IATTC_shape, WCPFC_shape, ICCAT_shape, IOTC_shape) <- lapply(list(IATTC_shape, WCPFC_shape, ICCAT_shape, IOTC_shape), fSpatPlan_Convert2PacificRobinson)
 
 require(tmap)
-map_of_grids_not_included_in_any_competence_area <- tm_shape(COUNTRIES_SF)+tm_fill("darkgrey")+tm_borders()+ tm_shape(SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA)+tm_borders()+tm_shape(IOTC_shape)+tm_borders()+
-  tm_shape(IATTC_shape)+tm_borders("red")+
-  tm_shape(WCPFC_shape)+tm_borders("yellow")+
-  tm_shape(ICCAT_shape)+tm_borders("green")
-  
+tmap_style("white")
+CA_WITH_NO_COMPETENCE_AREA <- tm_shape(COUNTRIES_SF)+tm_fill("darkgrey")+tm_borders()+ 
+  tm_shape(SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA)+tm_borders("red")+tm_fill("source_authority",title = "RFMO")+
+  tm_shape(IOTC_shape)+tm_borders("darkblue")+
+  tm_shape(IATTC_shape)+tm_borders("darkblue")+
+  tm_shape(WCPFC_shape)+tm_borders("darkblue")+
+  tm_shape(ICCAT_shape)+tm_borders("darkblue")
 
 
 
-tmap_save(filename=here("outputs/maps/outside_competence_zone_grids.png"),tm=map_of_grids_not_included_in_any_competence_area)
+
+tmap_save(filename=here("outputs/charts/mislocation/CA_WITH_NO_COMPETENCE_AREA.png"),tm=CA_WITH_NO_COMPETENCE_AREA)
 
 
 SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY <- SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA[, c("CWP_CODE", "GRIDTYPE","source_authority", "value" )] %>% 
@@ -77,13 +80,15 @@ CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID_SUMMARY = CA_WITH_DECL
 write.xlsx(CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID_SUMMARY, "outputs/datasets/CA_OUTSIDE_COMPETENCE_AREA.xlsx")
 
 
-map_of_captures_outside_juridiction_zone <- tm_shape(COUNTRIES_SF)+tm_fill("blue")+tm_shape(CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID)+tm_fill("source_authority")+tm_borders("red", lwd = 0.5)+tm_shape(IOTC_shape)+tm_borders()+
-  tm_shape(IATTC_shape)+tm_borders()+#tm_text("code")+
-  tm_shape(WCPFC_shape)+tm_borders()+#tm_text("code")+
-  tm_shape(ICCAT_shape)+tm_borders()+#tm_text("code")+
-tm_shape(IOTC_shape)+tm_borders()#+tm_text("code")
+CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT <- tm_shape(COUNTRIES_SF)+tm_fill("darkgrey")+tm_borders()+
+  tm_shape(CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID)+tm_fill("source_authority", title = "RFMO")+
+  tm_borders("red", lwd = 0.5)+tm_shape(IOTC_shape)+tm_borders("darkblue")+
+  tm_shape(IATTC_shape)+tm_borders("darkblue")+#tm_text("code")+
+  tm_shape(WCPFC_shape)+tm_borders("darkblue")+#tm_text("code")+
+  tm_shape(ICCAT_shape)+tm_borders("darkblue")+#tm_text("code")+
+  tm_shape(IOTC_shape)+tm_borders("darkblue")#+tm_text("code")
 
 
-tmap_save(filename=here("outputs/maps/outside_competence_zone_grids.png"),tm=map_of_grids_not_included_in_any_competence_area)
+tmap_save(filename=here("outputs/charts/mislocation/CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT.png"),tm=CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT)
 
 
