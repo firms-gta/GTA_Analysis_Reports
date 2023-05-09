@@ -30,7 +30,7 @@ include_graphics(paste0(here(),"/outputs/charts/mislocation/CA_PS_BB_11M_ON_LAND
 
 ### Geo-referenced catch data set by month and 5°x5° grid area
 
-```{r tab.cap = "Summary of total catch from the geo-referenced catch data set by month and 5°x5° grid area that are associated with grid squares located on land", tab.id = "MislocationLandCA55MTable"}
+```{r tab.cap = "Summary of total catch from the geo-referenced catch data set by month that are associated with grid squares located on land", tab.id = "MislocationLandCA55MTable"}
 CA_55M_ON_LAND_RFMO_UNIT_FT = 
   CA_55M_ON_LAND_RFMO_UNIT %>%
   flextable() %>%
@@ -132,7 +132,7 @@ cat(unlist(t), sep ="\\clearpage")
 
 ```{r CA_WITH_NO_COMPETENCE_AREA, fig.cap = "Reported captures on CWP grids being in none of the 4 competence areas", fig.id = "CA_WITH_NO_COMPETENCE_AREA"}
 
-include_graphics(paste0(here(),"/outputs/charts/mislocation/CA_WITH_NO_COMPETENCE_AREA.png"))
+include_graphics(paste0(here(),"/outputs/charts/mislocation/CA_WITH_NO_COMPETENCE_AREA_MAP.png"))
 
 ```
 
@@ -145,7 +145,7 @@ library(readxl)
 SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY <- read_excel(here("outputs/datasets/SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY.xlsx"))
 
 SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY = 
-  SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY %>%
+  SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY %>%rename(RFMO = source_authority) %>% 
   flextable() %>%
   flextable::font(fontname = "calibri", part = c("all")) %>% 
   align(part = "header", align = "center") %>% 
@@ -173,7 +173,7 @@ CA_OUTSIDE_COMPETENCE_AREA <- read_excel(here("outputs/datasets/CA_OUTSIDE_COMPE
 
 
 CA_OUTSIDE_COMPETENCE_AREA_DF = 
-  CA_OUTSIDE_COMPETENCE_AREA %>%distinct() %>% 
+  CA_OUTSIDE_COMPETENCE_AREA %>%distinct() %>% rename(RFMO = source_authority) %>% 
   flextable() %>%
   flextable::font(fontname = "calibri", part = c("all")) %>% 
   align(part = "header", align = "center") %>% 
@@ -181,7 +181,7 @@ CA_OUTSIDE_COMPETENCE_AREA_DF =
   fontsize(size = 9) %>% 
   border_inner() %>% 
   border_outer(border = fp_border(width = 2)) %>% 
-  merge_v(j = "RFMO") %>% 
+  merge_v(j = "source_authority") %>% 
   autofit() %>% 
   fix_border_issues()
 
@@ -190,9 +190,9 @@ CA_OUTSIDE_COMPETENCE_AREA_DF
 
 This concerns a few square for 3 tRFMOs.
 
-```{r CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT, fig.cap = "Reported captures on CWP grids being outside the competence zone of the declarant", fig.id = "CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT"}
+```{r CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT_MAP, fig.cap = "Reported captures on CWP grids being outside the competence zone of the declarant", fig.id = "CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT_MAP"}
 
-include_graphics(paste0(here(),"/outputs/charts/mislocation/CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT.png"))
+include_graphics(paste0(here(),"/outputs/charts/mislocation/CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT_MAP.png"))
 
 ```
 
