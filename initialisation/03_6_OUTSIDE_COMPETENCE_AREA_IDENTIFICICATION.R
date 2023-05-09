@@ -22,19 +22,22 @@ SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA <- CWP_GRIDS_WITHOUT_COMPETENCE_AREA_ON_OCE
 # 
 # list(IATTC_shape, WCPFC_shape, ICCAT_shape, IOTC_shape) <- lapply(list(IATTC_shape, WCPFC_shape, ICCAT_shape, IOTC_shape), fSpatPlan_Convert2PacificRobinson)
 
-require(tmap)
-tmap_style("white")
-CA_WITH_NO_COMPETENCE_AREA <- tm_shape(COUNTRIES_SF)+tm_fill("darkgrey")+tm_borders()+ 
-  tm_shape(SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA)+tm_borders("red")+tm_fill("source_authority",title = "RFMO")+
-  tm_shape(IOTC_shape)+tm_borders("darkblue")+
-  tm_shape(IATTC_shape)+tm_borders("darkblue")+
-  tm_shape(WCPFC_shape)+tm_borders("darkblue")+
-  tm_shape(ICCAT_shape)+tm_borders("darkblue")
+CA_WITH_NO_COMPETENCE_AREA_MAP <- ggplot() + 
+  geom_sf(data = COUNTRIES_SF, size = .2, fill = "darkgrey", col = NA) + 
+  theme(panel.grid.major = element_line(color = gray(0.9), linetype = "dashed", linewidth = 0.1)) + 
+  geom_sf(data = SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA %>% rename(RFMO = source_authority), aes(fill = RFMO), size = 3)+
+  geom_sf(data=IOTC_shape, size = .02,  fill = "transparent", col = "black")+
+  geom_sf(data=IATTC_shape, size = .02,  fill = "transparent", col = "black")+
+  geom_sf(data=WCPFC_shape, size = .02,  fill = "transparent", col = "black")+
+  geom_sf(data=ICCAT_shape, size = .02,  fill = "transparent", col = "black")+
+  theme_bw() +
+  labs(x = "", y = "", title = "") +
+  theme(panel.grid.major = element_line(color = gray(.5), linetype = "dashed", linewidth = 0.3), 
+        panel.background = element_rect(fill = "white")) + 
+  guides(fill = guide_legend(title = "RFMO"))
 
 
-
-
-tmap_save(filename=here("outputs/charts/mislocation/CA_WITH_NO_COMPETENCE_AREA.png"),tm=CA_WITH_NO_COMPETENCE_AREA)
+ggsave(filename=here("outputs/charts/mislocation/CA_WITH_NO_COMPETENCE_AREA_MAP.png"),CA_WITH_NO_COMPETENCE_AREA_MAP)
 
 
 SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY <- SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA[, c("CWP_CODE", "GRIDTYPE","source_authority", "value" )] %>% 
@@ -49,7 +52,7 @@ write.xlsx(SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY, "outputs/datasets/SUM_A
 ## Removing of double declared area
 
 SUM_ALL_GRIDS_WITH_COMPETENCE_AREA <- CWP_GRIDS_WITH_COMPETENCE_AREA_ON_OCEAN %>%
-  left_join(CA %>% dplyr::group_by(geographic_identifier, source_authority) %>% 
+  left_join(CA %>% dplyr::group_by(geographic_identifier, source_authority, unit) %>% 
               summarise(value =sum(value)), by = c("CWP_CODE" = "geographic_identifier")) %>% 
   dplyr::filter(!is.na(value)) %>% ungroup()
 
@@ -80,15 +83,31 @@ CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID_SUMMARY = CA_WITH_DECL
 write.xlsx(CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID_SUMMARY, "outputs/datasets/CA_OUTSIDE_COMPETENCE_AREA.xlsx")
 
 
-CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT <- tm_shape(COUNTRIES_SF)+tm_fill("darkgrey")+tm_borders()+
-  tm_shape(CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID)+tm_fill("source_authority", title = "RFMO")+
-  tm_borders("red", lwd = 0.5)+tm_shape(IOTC_shape)+tm_borders("darkblue")+
-  tm_shape(IATTC_shape)+tm_borders("darkblue")+#tm_text("code")+
-  tm_shape(WCPFC_shape)+tm_borders("darkblue")+#tm_text("code")+
-  tm_shape(ICCAT_shape)+tm_borders("darkblue")+#tm_text("code")+
-  tm_shape(IOTC_shape)+tm_borders("darkblue")#+tm_text("code")
+CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT_MAP <- ggplot() + 
+  geom_sf(data = COUNTRIES_SF, size = .2, fill = "darkgrey", col = NA) + 
+  theme(panel.grid.major = element_line(color = gray(0.9), linetype = "dashed", linewidth = 0.1)) + 
+  geom_sf(data = CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID %>% rename(RFMO = source_authority), aes(fill = RFMO), size = 3, col = "red")+
+  geom_sf(data=IOTC_shape, size = .02,  fill = "transparent", col = "blue")+
+  geom_sf(data=IATTC_shape, size = .02,  fill = "transparent", col = "red")+
+  geom_sf(data=WCPFC_shape, size = .02,  fill = "transparent", col = "black")+
+  geom_sf(data=ICCAT_shape, size = .02,  fill = "transparent", col = "green")+
+  theme_bw() +
+  labs(x = "", y = "", title = "") +
+  theme(panel.grid.major = element_line(color = gray(.5), linetype = "dashed", linewidth = 0.3), 
+        panel.background = element_rect(fill = "white")) + 
+  guides(fill = guide_legend(title = "RFMO"))
 
 
-tmap_save(filename=here("outputs/charts/mislocation/CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT.png"),tm=CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT)
+# CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT_MAP <- tm_shape(COUNTRIES_SF)+tm_fill("darkgrey")+tm_borders()+
+#   tm_shape(CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID)+tm_fill("source_authority", title = "RFMO")+
+#   tm_borders("red", lwd = 0.5)+tm_shape(IOTC_shape)+tm_borders("darkblue")+
+#   tm_shape(IATTC_shape)+tm_borders("darkblue")+#tm_text("code")+
+#   tm_shape(WCPFC_shape)+tm_borders("darkblue")+#tm_text("code")+
+#   tm_shape(ICCAT_shape)+tm_borders("darkblue")+#tm_text("code")+
+#   tm_shape(IOTC_shape)+tm_borders("darkblue")#+tm_text("code")
 
+
+ggsave(filename=here("outputs/charts/mislocation/CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT_MAP.png"),CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT_MAP)
+
+print('Outside competence area data filtered')
 
