@@ -12,7 +12,8 @@ knitr::opts_chunk$set(echo = FALSE,
                       tab.cap.sep = ". ", 
                       fig.cap.style = "Image Caption", 
                       fig.cap.pre = "Fig. ", 
-                      fig.cap.sep = ". "
+                      fig.cap.sep = ". ", 
+                      warning = FALSE
                       )
 ```
 
