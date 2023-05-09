@@ -1,0 +1,54 @@
+---
+title: "Overlapping general"
+output: html_document
+date: '2023-04-18'
+---
+
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      fig.cap = TRUE, 
+                      tab.cap.style = "Table Caption", 
+                      tab.cap.pre = "Tab. ",
+                      tab.cap.sep = ". ", 
+                      fig.cap.style = "Image Caption", 
+                      fig.cap.pre = "Fig. ", 
+                      fig.cap.sep = ". ", 
+                      warning = FALSE
+                      )
+```
+
+# Grids single declared in overlapping zones
+
+```{r CA_IN_OVERLAPPING_ZONES_MAP, fig.cap = "Distribution of catches in overlapping zones", fig.id = "barplot"}
+
+include_graphics(here("outputs/charts/overlapping/CA_IN_OVERLAPPING_ZONES_MAP.png"))
+
+```
+
+
+```{r CA_GRID_DOUBLE_DECLARATIONS_MAP, fig.cap = "Distribution of grids in overlapping zones having double declarations", fig.id = "barplot"}
+
+include_graphics(here("outputs/charts/overlapping/CA_GRID_DOUBLE_DECLARATIONS_MAP.png"))
+
+```
+
+Only a few of grids in several juridictions zones have actually declarations for multiple tRFMOs.
+
+
+```{r fig.cap = "Distribution of grids in overlapping zones having only records from one tRFMO (all 1 deg square aggregated in 5 deg)", fig.id = "barplot"}
+
+include_graphics(here("outputs/charts/overlapping/DATA_IN_OVERLAPPING_ZONE_NOT_WITH_DOUBLE_DECLARATION_MAP.png"))
+
+```
+
+The data recorded on those grids should be kept as it is recorded, even if it is contained in overlapping zone
+
+
+# Grids double declared in overlapping zones
+
+```{r child='Overlapping IATTC _ WCPFC.Rmd'}
+
+```
+

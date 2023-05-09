@@ -1,0 +1,120 @@
+---
+title: "Overlapping zone IATTC / WCPFC"
+output: html_document
+date: '2023-04-18'
+---
+
+
+
+For the following document, we aggregate all the data being in 1 deg square in 5 deg as the data in 1 deg square cannot be compared, is coming only from IATTC and does not represent a huge percentage of the total catches reported in the overlapping area.
+
+```{r tab.cap = "Summary of total catch reported in the overlapping area between IATTC and WCPFC groupped by spatial resolution, unit and RFMO", tab.id = "CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE"}
+
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE <- read_excel(here("outputs/datasets/CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE.xlsx"))
+
+
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE_FLEXTABLE = 
+  CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE %>% rename(RFMO= source_authority)%>%
+  flextable()  %>% 
+  flextable::font(fontname = "calibri", part = c("all")) %>% 
+  align(part = "header", align = "center") %>% 
+  colformat_double(digits = 0) %>%
+  fontsize(size = 9) %>% 
+  border_inner() %>% 
+  border_outer(border = fp_border(width = 2)) %>% 
+  merge_v(j = c("GRIDTYPE")) %>% 
+  autofit() %>% 
+  fix_border_issues()
+
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE_FLEXTABLE
+```
+
+# Analysis of reported catches on the overlapping area
+
+```{r tab.cap = "Summary of total catch reported in the overlapping area between IATTC and WCPFC groupped by species, unit and RFMO", tab.id = "CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES"}
+
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES <- read_excel(here("outputs/datasets/CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES.xslx"))
+
+
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES_FLEXTABLE = 
+  CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES %>% rename(RFMO= source_authority)%>%
+  flextable()  %>% 
+  flextable::font(fontname = "calibri", part = c("all")) %>% 
+  align(part = "header", align = "center") %>% 
+  colformat_double(digits = 0) %>%
+  fontsize(size = 9) %>% 
+  border_inner() %>% 
+  border_outer(border = fp_border(width = 2)) %>% 
+  merge_v(j = c("species")) %>% 
+  autofit() %>% 
+  fix_border_issues()
+
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES_FLEXTABLE
+```
+
+
+
+For most of the species, IATTC has bigger records of captures. However, for the major tunas, WCPFC has bigger records. 
+
+
+
+## Time series for each species
+
+
+
+```{r}
+
+list_files <- as.list(list.files(here("outputs/charts/overlapping/IATTC_WCPFC")))
+
+list_plots <- list_files[str_detect(list_files, "plot")]
+
+
+```
+
+
+
+```{r}
+resume_knit_child = function(x){
+
+  knitr::knit_child(text = c(
+    '',
+    '```{r}',
+    'name <- toupper(gsub("doubledeclaration","",gsub("_","",gsub("plots.png","",x))))',
+    '',
+    '```',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '```{r results = "asis", fig.cap = paste0("Time series of captures for the species : ",name)}',
+    'include_graphics(paste0(here("outputs/charts/overlapping/IATTC_WCPFC/", x)))',
+    '',
+    '',
+    '```',
+    '',
+    '',
+    ''
+
+
+
+
+  ), envir = environment(), quiet= TRUE)
+}
+
+
+```
+
+```{r results='asis'}
+
+t <- lapply(list_plots, resume_knit_child)
+
+```
+
+```{r results='asis'}
+
+cat(unlist(t), sep ="\\clearpage")
+
+```
+
