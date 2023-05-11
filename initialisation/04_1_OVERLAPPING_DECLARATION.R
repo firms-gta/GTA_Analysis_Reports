@@ -28,7 +28,7 @@ CWP_GRIDS_IN_OVERLAPPING_ZONES <- CWP_GRIDS_WITH_COMPETENCE_AREA %>% filter(labe
 
 CA_IN_OVERLAPPING_ZONES <- CA %>% inner_join(CWP_GRIDS_IN_OVERLAPPING_ZONES, by = c("geographic_identifier"= "CWP_CODE"))
 
-CA_IN_OVERLAPPING_ZONES_WITH_GEOM <- CA_IN_OVERLAPPING_ZONES %>% left_join(CWP_GRIDS, by = c("geographic_identifier"= "CWP_CODE"))
+CA_IN_OVERLAPPING_ZONES_WITH_GEOM <- CA_IN_OVERLAPPING_ZONES %>% left_join(CWP_GRIDS, by = c("geographic_identifier"= "CWP_CODE", "GRIDTYPE"))
 
 CA_IN_OVERLAPPING_ZONES_WITH_GEOM_GROUPPED_CWP_CODE <- CA_IN_OVERLAPPING_ZONES_WITH_GEOM %>% group_by(geographic_identifier, declarant_names, the_geom,GRIDTYPE) %>% summarise(value = sum(value))
 
@@ -76,12 +76,12 @@ url_scripts_create_own_tuna_atlas <- "https://raw.githubusercontent.com/eblondel
 source(file.path(url_scripts_create_own_tuna_atlas, "aggregate_resolution.R")) #modified for geoflow
 
 
-CA_IN_OVERLAPPING_ZONES_AGGREGATED_5DEG <- aggregate_resolution(con_GTA, CA_IN_OVERLAPPING_ZONES, "6")$df
+CA_IN_OVERLAPPING_ZONES_AGGREGATED_5DEG <- aggregate_resolution(con = con_GTA, df_input = CA_IN_OVERLAPPING_ZONES, resolution = 6)$df
 
 
 
 DATA_IN_OVERLAPPING_ZONE_NOT_WITH_DOUBLE_DECLARATION <- CA_IN_OVERLAPPING_ZONES_AGGREGATED_5DEG %>% ungroup() %>% 
-  anti_join(overlapping_declarations, by = "geographic_identifier") %>% inner_join(CWP_GRIDS, by = c("geographic_identifier" = "CWP_CODE")) %>% 
+  anti_join(overlapping_declarations, by = "geographic_identifier") %>% inner_join(CWP_GRIDS, by = c("geographic_identifier" = "CWP_CODE", "GRIDTYPE")) %>% 
   group_by(geographic_identifier, GRIDTYPE, unit, the_geom) %>% summarise(value = sum(value))
 
 DATA_IN_OVERLAPPING_ZONE_NOT_WITH_DOUBLE_DECLARATION_MAP <- ggplot() + 
