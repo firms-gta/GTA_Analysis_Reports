@@ -1,14 +1,14 @@
 print('IATTC and WCPFC overlap analyse')
 
 
-CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA <- CA_GRID_DOUBLE_DECLARATIONS %>%
-  dplyr::filter(declarant_names == "IATTC, WCPFC") %>% filter(source_authority %in% c("IATTC", "WCPFC"))
+CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA <- CA_IN_OVERLAPPING_ZONES_AGGREGATED_5DEG %>%
+  dplyr::filter(declarant_names == "East Pacific ocean, West Pacific ocean") %>% filter(source_authority %in% c("IATTC", "WCPFC"))
 
 
 
 
 CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY <- CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA %>% 
-   dplyr::mutate(unit = case_when(unit %in% c("MT","MTNO")~ "Tons", unit %in% c( "NOMT", "NO")~"Number of fish")) %>% 
+   dplyr::mutate(unit = case_when(unit %in% c("MT","MTNO","t")~ "Tons", unit %in% c( "NOMT", "NO", "no")~"Number of fish")) %>% 
   mutate(Year = lubridate::year(time_start)) %>% 
   group_by(unit, source_authority, species, geographic_identifier, Year) %>% summarise(value = sum(value))
 
