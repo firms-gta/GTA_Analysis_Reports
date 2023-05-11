@@ -6,7 +6,7 @@ CWP_GRIDS_WITHOUT_COMPETENCE_AREA_ON_OCEAN <- CWP_GRIDS_WITH_COMPETENCE_AREA_ON_
   dplyr::filter(is.na(label)) 
 
 SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA <- CWP_GRIDS_WITHOUT_COMPETENCE_AREA_ON_OCEAN %>%
-  left_join(CA %>% dplyr::group_by(geographic_identifier, source_authority) %>% 
+  left_join(CA %>% dplyr::group_by(geographic_identifier, source_authority, unit) %>% 
               summarise(value =sum(value)), by = c("CWP_CODE" = "geographic_identifier")) %>% 
   dplyr::filter(!is.na(value)) %>% ungroup()
 
@@ -40,7 +40,7 @@ CA_WITH_NO_COMPETENCE_AREA_MAP <- ggplot() +
 ggsave(filename=here("outputs/charts/mislocation/CA_WITH_NO_COMPETENCE_AREA_MAP.png"),CA_WITH_NO_COMPETENCE_AREA_MAP)
 
 
-SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY <- SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA[, c("CWP_CODE", "GRIDTYPE","source_authority", "value" )] %>% 
+SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY <- SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA[, c("CWP_CODE", "GRIDTYPE","source_authority", "value", "unit" )] %>% 
   st_set_geometry(NULL)
 
 
@@ -86,7 +86,7 @@ write.xlsx(CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID_SUMMARY, "o
 CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT_MAP <- ggplot() + 
   geom_sf(data = COUNTRIES_SF, size = .2, fill = "darkgrey", col = NA) + 
   theme(panel.grid.major = element_line(color = gray(0.9), linetype = "dashed", linewidth = 0.1)) + 
-  geom_sf(data = CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID %>% rename(RFMO = source_authority), aes(fill = RFMO), size = 3, col = "red")+
+  geom_sf(data = CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID %>% rename(RFMO = source_authority), aes(fill = RFMO), size = 3)+
   geom_sf(data=IOTC_shape, size = .02,  fill = "transparent", col = "blue")+
   geom_sf(data=IATTC_shape, size = .02,  fill = "transparent", col = "red")+
   geom_sf(data=WCPFC_shape, size = .02,  fill = "transparent", col = "black")+
