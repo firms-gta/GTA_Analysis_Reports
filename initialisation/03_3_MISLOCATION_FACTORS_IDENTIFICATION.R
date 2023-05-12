@@ -9,7 +9,7 @@ require(studycatchesird)
 time_dimension <- c("time_start", "time_end")
 geographical_dimension <- "geographic_identifier"
 colnames_to_keep <- c("fishingfleet",         "gear",                 "time_start",                 
-                      "geographic_identifier","schooltype",           "species",              "catchtype",           
+                      "geographic_identifier","schooltype",           "species",             # "catchtype",           
                       "unit",                 "value",                "source_authority")
 
 list_pie_chart <- list(setdiff(colnames_to_keep, unlist(list(time_dimension, geographical_dimension, "unit", "value"))))[[1]]
