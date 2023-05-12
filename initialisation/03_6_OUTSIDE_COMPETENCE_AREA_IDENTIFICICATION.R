@@ -6,7 +6,7 @@ CWP_GRIDS_WITHOUT_COMPETENCE_AREA_ON_OCEAN <- CWP_GRIDS_WITH_COMPETENCE_AREA_ON_
   dplyr::filter(is.na(label)) 
 
 SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA <- CWP_GRIDS_WITHOUT_COMPETENCE_AREA_ON_OCEAN %>%
-  left_join(CA %>% dplyr::group_by(geographic_identifier, source_authority, unit) %>% 
+  left_join(CA %>% dplyr::group_by(geographic_identifier, source_authority, unit, species) %>% 
               summarise(value =sum(value)), by = c("CWP_CODE" = "geographic_identifier")) %>% 
   dplyr::filter(!is.na(value)) %>% ungroup()
 
@@ -40,7 +40,7 @@ CA_WITH_NO_COMPETENCE_AREA_MAP <- ggplot() +
 ggsave(filename=here("outputs/charts/mislocation/CA_WITH_NO_COMPETENCE_AREA_MAP.png"),CA_WITH_NO_COMPETENCE_AREA_MAP)
 
 
-SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY <- SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA[, c("CWP_CODE", "GRIDTYPE","source_authority", "value", "unit" )] %>% 
+SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY <- SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA[, c("source_authority","CWP_CODE", "GRIDTYPE", "value", "unit", "species" )] %>% 
   st_set_geometry(NULL)
 
 
@@ -78,7 +78,7 @@ CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID_1deg <- CA_WITH_DECLAR
 CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID_5deg <- CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID %>% filter(startsWith(CWP_CODE,"6"))
 
 CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID_SUMMARY = CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID %>%group_by(source_authority)%>%
-  mutate(Number_of_declaration = n()) %>% dplyr::select(-value) %>% st_set_geometry(NULL)
+  mutate(Number_of_declaration = n()) %>% dplyr::select(-value) %>% ungroup() %>% dplyr::select(source_authority, unit, everything())%>%arrange(source_authority, unit) %>%  st_set_geometry(NULL) 
 
 write.xlsx(CA_WITH_DECLARATION_OUTSIDE_JURIDICTION_ZONE_GROUPED_GRID_SUMMARY, "outputs/datasets/CA_OUTSIDE_COMPETENCE_AREA.xlsx")
 
