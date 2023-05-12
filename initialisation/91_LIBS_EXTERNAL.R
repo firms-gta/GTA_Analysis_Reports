@@ -27,7 +27,7 @@ pacman::p_load("tidyverse",
                "dotenv",
                "here",
                "renv",
-               "RPostgreSQL", update=FALSE)
+               "RPostgreSQL", "cowplot", update=FALSE)
 
 # Addition for plotting the Pacific-centred maps
 base::load(url("https://github.com/valentinitnelav/RandomScripts/blob/master/NaturalEarth.RData?raw=true"))
