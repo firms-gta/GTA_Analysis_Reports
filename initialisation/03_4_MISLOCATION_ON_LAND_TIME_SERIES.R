@@ -45,7 +45,7 @@ time_series_mislocated_by_trfmo <- lapply(list(CA_ON_LAND), function(x){
     theme(legend.position = "top") +
     facet_wrap(vars(unit), nrow = 2L)+
     labs(x = "Time", y = "Values")+
-    facet_grid(c("unit", "source_authority"), scales = "free_y")
+    facet_wrap(c("unit", "source_authority"), scales = "free")
 })
 
 ggsave(paste0(here(),"/outputs/charts/mislocation/time_series_mislocated_by_trfmo.png" ), time_series_mislocated_by_trfmo[[1]], width = 8, height = 7)

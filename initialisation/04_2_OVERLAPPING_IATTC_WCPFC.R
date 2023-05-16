@@ -20,8 +20,16 @@ CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP <-
   mutate(IATTC = ifelse(is.na(IATTC), 0, IATTC)) %>% 
   mutate(WCPFC = ifelse(is.na(WCPFC), 0, WCPFC)) %>% 
   mutate(Diff = ((IATTC-WCPFC))) %>% ungroup()  %>% rowwise() %>% 
-  mutate(Double = as.factor(ifelse(is.na(IATTC)| is.na(WCPFC)|IATTC == 0 | WCPFC == 0 , "SINGLE", "DOUBLE")))
+  mutate(Double = as.factor(case_when(is.na(IATTC)| IATTC==0 ~ "WCPFC", is.na(WCPFC) | WCPFC == 0 ~ "IATTC", TRUE~"DOUBLE")))
   
+
+species_unique  <- (CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY %>% group_by(species) %>% 
+                      summarise(count = n_distinct(source_authority)) %>% filter(count <2))$species
+saveRDS(species_unique,"species_unique.Rds")
+
+species_doubled  <- (CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY %>% group_by(species) %>% 
+                      summarise(count = n_distinct(source_authority)) %>% filter(count ==2))$species
+
 
 CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP_CLEANED <- CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP %>% 
   pivot_longer(cols = c("IATTC", "WCPFC"), 
@@ -33,29 +41,49 @@ library(purrr)
 CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP_doubled_geographic <- CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP %>% 
   filter(Double == "DOUBLE")
 
-# Create a list of plot of double and single area for each species 
+# Create a list of plot of double and single area for each species having double declaration
 
-plot_list_single_double <- map(unique(CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP_doubled_geographic$species), function(species){
-  ggplot(data = filter(CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP_doubled_geographic, species == !!species)) +
+plot_list_single_double <- map(species_doubled, function(species){
+  ggplot(data = filter(CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP, species == !!species)) +
     geom_sf(data = COUNTRIES_SF, size = 0.2, fill = "darkgrey", color = NA) + 
     geom_sf(aes(geometry = the_geom, fill = Double), size = 3) +
     facet_grid(~ unit) + 
-    scale_fill_manual(values = c("DOUBLE" = "red", "SINGLE" = "blue"), labels = c("DOUBLE" ="Double declaration", "SINGLE" ="Single declaration")) +
+    scale_fill_manual(values = c("DOUBLE" = "green", "IATTC" = "blue", "WCPFC" = "red"), labels = c("DOUBLE" ="Double declaration", "IATTC" ="IATTC declaration", "WCPFC" ="WCPFC declaration")) +
     labs(x = "", y = "", title = paste0("Map of ", species)) +
     theme_bw() +
     theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", linewidth = 0.3), 
           panel.background = element_rect(fill = "white"))
 })
 # Save each plot as a file with the name of the species
-walk2(plot_list_single_double, unique(CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP_doubled_geographic$species), function(plot, species){
-  ggsave(paste0("outputs/charts/overlapping/IATTC_WCPFC/single_double_declaration_",species, "_charts.png"), plot, width = 12, height = 8, dpi = 300)
+walk2(plot_list_single_double, species_doubled, function(plot, species){
+  ggsave(paste0("outputs/charts/overlapping/IATTC_WCPFC/species_doubled/single_double_declaration_",species, "_charts.png"), plot, width = 12, height = 8, dpi = 300)
 })
 
-# Create a list of ggplots, one for each species
+
+#### For single species 
+
+plot_list_single <- map(species_unique, function(species){
+  ggplot(data = filter(CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP, species == !!species)) +
+    geom_sf(data = COUNTRIES_SF, size = 0.2, fill = "darkgrey", color = NA) + 
+    geom_sf(aes(geometry = the_geom, fill = Double), size = 3) +
+    facet_grid(~ unit) + 
+    scale_fill_manual(values = c("DOUBLE" = "green", "IATTC" = "blue", "WCPFC" = "red"), labels = c("DOUBLE" ="Double declaration", "IATTC" ="IATTC declaration", "WCPFC" ="WCPFC declaration")) +
+    labs(x = "", y = "", title = paste0("Map of ", species)) +
+    theme_bw() +
+    theme(panel.grid.major = element_line(color = gray(0.5), linetype = "dashed", linewidth = 0.3), 
+          panel.background = element_rect(fill = "white"))
+})
+# Save each plot as a file with the name of the species
+walk2(plot_list_single, species_unique, function(plot, species){
+  ggsave(paste0("outputs/charts/overlapping/IATTC_WCPFC/species_unique/single_double_declaration_",species, "_charts.png"), plot, width = 12, height = 8, dpi = 300)
+})
+
+
+# Create a list of ggplots, one for each species double declared, we are only using the doubled declared species from now
 
 require(cowplot)
 
-plot_list <- map(unique(CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP_doubled_geographic$species), function(species){
+plot_list <- map(species_doubled, function(species){
   p <- cowplot::plot_grid(
     ggplot() +
     geom_sf(data = COUNTRIES_SF, size = .2, fill = "darkgrey", col = NA) + 
@@ -87,15 +115,33 @@ plot_list <- map(unique(CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DA
       scale_fill_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) + 
       guides(fill = guide_legend(title = "Diff")), labels  = c("Number of fish", "Tons"))
   title <- ggdraw() + draw_label(paste0("Map of ", species), fontface='bold')
-  plot_grid(title, p, ncol=1, rel_heights=c(0.1, 1))
+  p <- plot_grid(title, p, ncol=1, rel_heights=c(0.1, 1))
+  
+  plot <- ggplot() +
+    geom_line(data = CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP_CLEANED %>% 
+                group_by(unit, RFMO, species, Year) %>%
+                summarise(value =sum(value)) %>% 
+                ungroup() %>% 
+                filter(species == !!species), 
+              aes(x = Year, y = value, color = RFMO)) +
+    geom_point(shape = "circle", size = 1.5) +
+    scale_color_hue(direction = 1) +
+    theme_minimal()+
+    facet_wrap(vars(unit), scales = "free_y")+
+    ggtitle(paste0("Time series captures for ", species, " in the overlapping zone IATTC / WCPFC"))
+  
+  
+  return(plot_grid(p,plot, nrow = 2))
 })
 
 # Save each plot as a file with the name of the species
-walk2(plot_list, unique(CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP_doubled_geographic$species), function(plot, species){
-  ggsave(paste0("outputs/charts/overlapping/IATTC_WCPFC/double_declaration_",species, "_charts.png"), plot, width = 12, height = 8, dpi = 300)
+walk2(plot_list, species_doubled, function(plot, species){
+  ggsave(paste0("outputs/charts/overlapping/IATTC_WCPFC/species_doubled/double_declaration_",species, "_charts_and_plots.png"), plot, width = 12, height = 8, dpi = 300)
 })
 
 ## Analaysis of spatial resolution of the declarations in the overlapping area
+
+
 
 CWP_GRIDS_IN_OVERLAPPING_ZONES_IATTC_WCPFC <- CWP_GRIDS_IN_OVERLAPPING_ZONES %>% filter(declarant_names == "East Pacific ocean, West Pacific ocean")
 
@@ -119,39 +165,10 @@ write.xlsx(CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES, "outputs/dataset
 
 ############## ANALYSIS OF DATA FOR SPECIES WITH OVERLAPS ###############
 
-CA_DOUBLE_DECLARATION_IATTC_WCPFC<- CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP %>% 
-  # dplyr::filter(Double == "DOUBLE") %>% 
-  ungroup()
-
-species_overlaped <- unique((CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP %>% 
-                              dplyr::filter(Double == "DOUBLE") %>%
-                              ungroup())$species)
 
 
 
-# IATTC_WCPFC_sup <- CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP %>% 
-#   dplyr::mutate(SUP = case_when(IATTC > WCPFC ~ "IATTC", WCPFC > IATTC ~ "WCPFC", TRUE ~ " EQUAL"))
 
-
-plot_list <- map(species_overlaped, function(species){
-  ggplot() +
-    geom_line(data = CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP_CLEANED %>% 
-                group_by(unit, RFMO, species, Year) %>%
-                summarise(value =sum(value)) %>% 
-                ungroup() %>% 
-                filter(species == !!species), 
-              aes(x = Year, y = value, color = RFMO)) +
-    geom_point(shape = "circle", size = 1.5) +
-    scale_color_hue(direction = 1) +
-    theme_minimal()+
-    facet_wrap(vars(unit), scales = "free_y")+
-    ggtitle(paste0("Time series captures for ", species, " in the overlapping zone IATTC / WCPFC"))
-  
-})
-
-walk2(plot_list, species_overlaped, function(plot, species){
-  ggsave(paste0("outputs/charts/overlapping/IATTC_WCPFC/double_declaration_",species, "_plots.png"), plot, width = 12, height = 8, dpi = 300)
-})
 
 
 
