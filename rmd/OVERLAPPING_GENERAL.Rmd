@@ -1,7 +1,7 @@
 ---
 title: "Overlapping general"
-output: html_document
 date: '2023-04-18'
+toc: true
 ---
 
 
@@ -43,12 +43,39 @@ include_graphics(here("outputs/charts/overlapping/DATA_IN_OVERLAPPING_ZONE_NOT_W
 
 ```
 
-The data recorded on those grids should be kept as it is recorded, even if it is contained in overlapping zone
+To be noted that the only 10x10 grid in the overlapping zone has declaration only from one tRFMO. 
+
+The data recorded on those grids should be kept as it is recorded, even if it is contained in overlapping zone.
+
+
 
 
 # Grids double declared in overlapping zones
 
+## Overlapping IATTC / WCPFC area
+
 ```{r child='Overlapping IATTC _ WCPFC.Rmd'}
+
+```
+
+## Overlapping IOTC / WCPFC area
+
+```{r child='Overlapping IOTC _ WCPFC.Rmd'}
+
+```
+
+# Overlapping with CCSBT data for Southern Bluefin Tuna
+
+
+```{r child='Overlapping_CCSBT_data.Rmd'}
+
+```
+
+
+# Summary of the proposed changes on the Global Tuna Atlas 2023
+
+
+```{r}
 
 ```
 
