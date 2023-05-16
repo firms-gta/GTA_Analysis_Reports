@@ -67,6 +67,8 @@ include_graphics(paste0(here(),"/outputs/charts/mislocation/time_series_mislocat
 
 ```
 
+The data located on land is higher for last decade, for every tRFMO and for each unit.
+
 ### Repartition of factors for data on land
 
 ```{r}
@@ -144,6 +146,9 @@ include_graphics(paste0(here(),"/outputs/charts/mislocation/CA_WITH_NO_COMPETENC
 library(readxl)
 SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY <- read_excel(here("outputs/datasets/SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY.xlsx"))
 
+total <- sum(SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY$value)
+species <- unique(SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY$species)
+
 SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY = 
   SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY %>%rename(RFMO = source_authority) %>% 
   flextable() %>%
@@ -160,7 +165,7 @@ SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY =
 SUM_ALL_GRIDS_WIHOUT_COMPETENCE_AREA_SUMMARY
 ```
 
-This does not concern a lot of data and most of the cwp grid are only a bit outside a continent.
+This does not concern a lot of data and most of the cwp grid are only a bit outside a juridiction zone (i.e `r total` tons.) This however concern `r length(species)` species, which are `r species`. This include major tuna species.
 
 ## Catches outside declarant juridiction zone
 
@@ -173,7 +178,7 @@ CA_OUTSIDE_COMPETENCE_AREA <- read_excel(here("outputs/datasets/CA_OUTSIDE_COMPE
 
 
 CA_OUTSIDE_COMPETENCE_AREA_DF = 
-  CA_OUTSIDE_COMPETENCE_AREA %>%distinct() %>% rename(RFMO = source_authority) %>% 
+  CA_OUTSIDE_COMPETENCE_AREA %>%distinct() %>% rename(RFMO = source_authority) %>% group_by(RFMO, unit)%>%arrange(RFMO, unit) %>%  
   flextable() %>%
   flextable::font(fontname = "calibri", part = c("all")) %>% 
   align(part = "header", align = "center") %>% 
@@ -181,14 +186,14 @@ CA_OUTSIDE_COMPETENCE_AREA_DF =
   fontsize(size = 9) %>% 
   border_inner() %>% 
   border_outer(border = fp_border(width = 2)) %>% 
-  merge_v(j = "source_authority") %>% 
+  merge_v(j = c("RFMO", "unit")) %>% 
   autofit() %>% 
   fix_border_issues()
 
 CA_OUTSIDE_COMPETENCE_AREA_DF
 ```
 
-This concerns a few square for 3 tRFMOs.
+This concerns a few square for `r unique(CA_OUTSIDE_COMPETENCE_AREA$source_authority)`. 
 
 ```{r CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT_MAP, fig.cap = "Reported captures on CWP grids being outside the competence zone of the declarant", fig.id = "CA_OUTSIDE_COMPETENCE_AREA_OF_DECLARANT_MAP"}
 
@@ -197,4 +202,5 @@ include_graphics(paste0(here(),"/outputs/charts/mislocation/CA_OUTSIDE_COMPETENC
 ```
 
 
+This mostly concern the IATTC / ICCAT zone close to the border.
 
