@@ -28,3 +28,7 @@ knitr::opts_chunk$set(echo = FALSE,
 
 ```{r child = '03_01_RESULTS_MISLOCATION_DOCX.Rmd'}
 ```
+
+```{r child = '04_CONCLUSION.Rmd'}
+```
+
