@@ -5,7 +5,9 @@ if(!require(pacman)){
   suppressPackageStartupMessages(library(pacman,quietly = TRUE))
 }
 
-renv::restore()
+# renv::restore()
+renv::activate()
+renv::load()
 
 
 pacman::p_load("tidyverse",
@@ -27,7 +29,7 @@ pacman::p_load("tidyverse",
                "dotenv",
                "here",
                "renv",
-               "RPostgreSQL", "cowplot", update=FALSE)
+               "RPostgreSQL", "cowplot", "readxl", update=FALSE)
 
 # Addition for plotting the Pacific-centred maps
 base::load(url("https://github.com/valentinitnelav/RandomScripts/blob/master/NaturalEarth.RData?raw=true"))
