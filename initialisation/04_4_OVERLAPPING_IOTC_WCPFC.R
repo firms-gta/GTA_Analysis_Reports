@@ -19,7 +19,7 @@ CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IOTC_WCPFC_DATA_SUMMARY_COMP <-
   pivot_wider(names_from = "source_authority", values_from = "value") %>% inner_join(CWP_GRIDS, by = c("geographic_identifier" = "CWP_CODE")) %>%
   mutate(IOTC = ifelse(is.na(IOTC), 0, IOTC)) %>% 
   mutate(WCPFC = ifelse(is.na(WCPFC), 0, WCPFC)) %>% 
-  mutate(Diff = ((IOTC-WCPFC))) %>% ungroup()  %>% rowwise() %>% 
+  mutate(`Diff (IOTC-WCPFC)` = ((IOTC-WCPFC))) %>% ungroup()  %>% rowwise() %>% 
   mutate(Double = as.factor(case_when(is.na(IOTC)| IOTC==0 ~ "WCPFC", is.na(WCPFC) | WCPFC == 0 ~ "IOTC", TRUE~"DOUBLE")))
 
 
@@ -88,32 +88,32 @@ plot_list <- map(species_doubled, function(species){
     ggplot() +
       geom_sf(data = COUNTRIES_SF, size = .2, fill = "darkgrey", col = NA) + 
       theme(panel.grid.major = element_line(color = gray(0.9), linetype = "dashed", linewidth = 0.1)) + 
-      geom_sf(data = CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IOTC_WCPFC_DATA_SUMMARY_COMP_doubled_geographic %>% 
+      geom_sf(data = CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IOTC_WCPFC_DATA_SUMMARY_COMP_CLEANED %>% 
                 ungroup()  %>% 
-                filter(species == !!species) %>% filter(unit == "Number of fish") %>% group_by(geographic_identifier, the_geom) %>% summarise(Diff = sum(Diff)), 
-              aes(geometry = the_geom, fill = Diff), size = 3) +
+                filter(species == !!species) %>% filter(unit == "Number of fish") %>% group_by(geographic_identifier, the_geom) %>% summarise(`Diff (IOTC-WCPFC)` = sum(`Diff (IOTC-WCPFC)`)), 
+              aes(geometry = the_geom, fill = `Diff (IOTC-WCPFC)`), size = 3) +
       # facet_wrap(~unit)+   # add facet for GRIDTYPE
       theme_bw() +
       labs(x = "", y = "", title = "") +
       theme(panel.grid.major = element_line(color = gray(.5), linetype = "dashed", linewidth = 0.3), 
             panel.background = element_rect(fill = "white")) + 
       scale_fill_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) + 
-      guides(fill = guide_legend(title = "Diff")),
+      guides(fill = guide_legend(title = "`Diff (IOTC-WCPFC)`")),
     
     ggplot() +
       geom_sf(data = COUNTRIES_SF, size = .2, fill = "darkgrey", col = NA) + 
       theme(panel.grid.major = element_line(color = gray(0.9), linetype = "dashed", linewidth = 0.1)) + 
-      geom_sf(data = CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IOTC_WCPFC_DATA_SUMMARY_COMP_doubled_geographic %>% 
+      geom_sf(data = CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IOTC_WCPFC_DATA_SUMMARY_COMP_CLEANED %>% 
                 ungroup()  %>% 
-                filter(species == !!species) %>% filter(unit == "Tons")%>% group_by(geographic_identifier, the_geom) %>% summarise(Diff = sum(Diff)), 
-              aes(geometry = the_geom, fill = Diff), size = 3) +
+                filter(species == !!species) %>% filter(unit == "Tons")%>% group_by(geographic_identifier, the_geom) %>% summarise(`Diff (IOTC-WCPFC)` = sum(`Diff (IOTC-WCPFC)`)), 
+              aes(geometry = the_geom, fill = `Diff (IOTC-WCPFC)`), size = 3) +
       # facet_wrap(~unit)+   # add facet for GRIDTYPE
       theme_bw() +
       labs(x = "", y = "", title = "") +
       theme(panel.grid.major = element_line(color = gray(.5), linetype = "dashed", linewidth = 0.3), 
             panel.background = element_rect(fill = "white")) + 
       scale_fill_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) + 
-      guides(fill = guide_legend(title = "Diff")), labels  = c("Number of fish", "Tons"))
+      guides(fill = guide_legend(title = "`Diff (IOTC-WCPFC)`")), labels  = c("Number of fish", "Tons"))
   title <- ggdraw() + draw_label(paste0("Map of ", species), fontface='bold')
   p <- plot_grid(title, p, ncol=1, rel_heights=c(0.1, 1))
   

@@ -2,7 +2,7 @@
 # Checking all the square having declarations for more than one tRFMO
 
 CA_RAW <- readRDS(here("inputs/data/mapped_codelist.rds"))  %>% 
-  dplyr::mutate(unit = case_when(unit %in% c("MT","MTNO","t")~ "MT", unit %in% c( "NOMT", "NO", "no")~"NO"))
+  dplyr::mutate(unit = case_when(unit %in% c("MT","MTNO","t")~ "MT", unit %in% c( "NOMT", "NO", "no")~"NO")) %>% filter(species %in% cwp_codes)
 
 
 overlapping_declarations <- as.data.frame(CA_RAW) %>% filter(source_authority != "CCSBT") %>% 
@@ -142,15 +142,55 @@ source(here("conversion_function.R"))
 
 # if(!exists(here("data/conversion_factors.csv"))){
 
-converted_overlapping <- conversion(con = con,
-                                      fact="catch",
-                                      unit_conversion_csv_conversion_factor_url="https://drive.google.com/open?id=1csQ5Ww8QRTaYd1DG8chwuw0UVUOGkjNL",
-                                      unit_conversion_codelist_geoidentifiers_conversion_factors="areas_tuna_rfmos_task2",
-                                      mapping_map_code_lists=TRUE,
-                                      georef_dataset=CA_GRID_DOUBLE_DECLARATIONS_5_DEG, 
-                                      removing_numberfish_final = FALSE) # do not remove number of fish as they will be converted later with other conversion factor data
 
+source(file.path(url_scripts_create_own_tuna_atlas, "map_codelists.R")) #modified for geoflow
+
+
+iotc_conv_fact <- read_csv("data/conversion_factors_IOTC.csv", 
+                           col_types = cols(geographic_identifier = col_character(), 
+                                            time_start = col_character(), time_end = col_character())) %>% dplyr::rename(value = conversion_factor)
+mapping_dataset <- read.csv("data/codelist_mapping_rfmos_to_global.csv")
+
+iotc_conv_fact_mapped <- map_codelists(con_GTA, "catch", mapping_dataset = mapping_dataset, dataset_to_map = iotc_conv_fact, mapping_keep_src_code = FALSE,
+                                       source_authority_to_map = c("IOTC"))$dataset_mapped%>% dplyr::rename( conversion_factor= value)#this map condelist function is to retieve the mapping dataset used
+
+library(lubridate)
+
+iotc_conv_fact_mapped$time_start <- as.Date(iotc_conv_fact_mapped$time_start)
+iotc_conv_fact_mapped$time_start <- as.character(floor_date(iotc_conv_fact_mapped$time_start, "year"))
+iotc_conv_fact_mapped$time_end <- as.Date(iotc_conv_fact_mapped$time_end)
+iotc_conv_fact_mapped$time_end <- as.character(ceiling_date(iotc_conv_fact_mapped$time_end, "year") - days(1))
+
+
+
+
+iotc_conversionned <- conversion(con = con,   fact="catch",
+                                                          unit_conversion_csv_conversion_factor_url=iotc_conv_fact_mapped,
+                                                          unit_conversion_codelist_geoidentifiers_conversion_factors="areas_tuna_rfmos_task2",
+                                                          mapping_map_code_lists=TRUE,
+                                                          georef_dataset=CA_GRID_DOUBLE_DECLARATIONS_5_DEG%>% filter(source_authority == "IOTC") , 
+                                                          removing_numberfish_final = FALSE)
+
+
+not_converted <- anti_join(CA_GRID_DOUBLE_DECLARATIONS_5_DEG, iotc_conversionned,by = join_by(source_authority, species, gear, fishingfleet, schooltype, time_start,
+                                                                                               time_end, geographic_identifier, catchtype, GRIDTYPE, number_of_declarant,
+                                                                                               declarant_names))
+
+
+converted_overlapping <- conversion(con = con,
+                                    fact="catch",
+                                    unit_conversion_csv_conversion_factor_url="https://drive.google.com/open?id=1csQ5Ww8QRTaYd1DG8chwuw0UVUOGkjNL",
+                                    unit_conversion_codelist_geoidentifiers_conversion_factors="areas_tuna_rfmos_task2",
+                                    mapping_map_code_lists=TRUE,
+                                    georef_dataset=not_converted, 
+                                    removing_numberfish_final = FALSE) # do not remove number of fish as they will be converted later with other conversion factor data
+
+
+converted_overlapping <- rbind(converted_overlapping , iotc_conversionned)
 # }
+
+
+
 
 
 print('Overlapping declarations maps finished !')
