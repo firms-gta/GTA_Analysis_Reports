@@ -1,0 +1,88 @@
+---
+title: "Conversion factors analysis"
+date: "2023-05-19"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+The conversion factor being higher than the maximum recorded catch represent `r percent_outside` percent of the total catches being recorded with two units.
+
+
+```{r}
+
+
+conversion_factor_level0 <- rbind(inner_join(strata_nomt, strata_mtno, by = setdiff(colnames(strata_mtno), c("value", "unit")) ) %>% 
+                                   rename(NO = value.x, MT = value.y) %>%
+                                   group_by(gear, time_start, time_end, geographic_identifier, species, source_authority, schooltype, catchtype, fishingfleet) %>%
+                                   summarise(NO = sum(NO), MT = sum(MT)) %>% 
+                                   ungroup(),
+                                 inner_join(strata_mtno, strata_nomt, by = setdiff(colnames(strata_mtno), c("value", "unit")) ) %>% 
+                                   rename(MT = value.x, NO = value.y) %>%
+                                   group_by(gear, time_start, time_end, geographic_identifier, species, source_authority, schooltype, catchtype, fishingfleet) %>%
+                                   summarise(NO = sum(NO), MT = sum(MT)) %>% 
+                                   ungroup()) %>%
+  distinct() %>%
+  group_by(gear, time_start, time_end, geographic_identifier, species, source_authority, schooltype, catchtype, fishingfleet) %>%
+  summarise(NO = sum(NO), MT = sum(MT)) %>% 
+  mutate(conversion_factor = MT/NO) %>% 
+  distinct()
+
+max_conversion_factor <- read_csv("data/max_conversion_factor.csv", col_types = cols(max_weight = col_double(), min_weight = col_double()))
+
+outside_limit_conv_factor <- full_join(conversion_factor_level0 %>% ungroup(), max_conversion_factor) %>% 
+  mutate(conform = case_when(conversion_factor < min_weight ~ "Too low", conversion_factor > max_weight ~ "Too high", TRUE ~ "INSIDE"))
+
+percent_inside_outside <- outside_limit_conv_factor %>% group_by(conform) %>% summarise(value = n())
+
+percent_outside <- 100 - (100 * (((percent_inside_outside %>% filter(conform == "INSIDE"))$sum) - ((percent_inside_outside %>% filter(conform != "INSIDE"))$sum)) / ((percent_inside_outside %>% filter(conform == "INSIDE"))$sum))
+
+outside_limit_conv_factor_groupped <- outside_limit_conv_factor %>% filter(conform == "Too high")%>% group_by(across(list_pie_chart)) %>% summarise(value= n())%>% mutate(unit = "Not conform conversion factors") 
+
+
+pie_charts_multiple <- lapply(list_pie_chart, FUN = function_pie_chart_df, first = outside_limit_conv_factor_groupped, topn = 6)
+
+figures <- lapply(pie_charts_multiple, function(x) {x$pie_chart})
+dimension_title_subfigures <- lapply(pie_charts_multiple, function(x) {paste0("Distribution in value for the dimension : ", x$dimension)})
+
+```
+
+
+
+
+```{r echo=FALSE, eval=TRUE, fig.cap='Repartition of non conform conversion factors by gear, species and fishingfleet', fig.subcap=c(unlist(gsub("_","..",dimension_title_subfigures))), fig.ncol = 1, out.width = "100%", fig.align = "center"}
+for (i in figures){plot(i)}
+```
+
+```{r}
+mean_conv_by_specie <- conversion_factor_level0 %>% group_by(species) %>% summarise(conversion_factor_mean = mean(conversion_factor), conversion_factor_max = max(conversion_factor))
+```
+
+
+
+```{r}
+outside_limit_conv_factor_time<- outside_limit_conv_factor%>% filter(conform == "Too high") %>% mutate(Year = lubridate::year(time_start))%>% group_by(Year, species, source_authority) %>% summarise(`Number of absurd conversion factors`= n()) %>% filter(!is.na(`Number of absurd conversion factors`))
+```
+
+
+
+```{r}
+ggplot(outside_limit_conv_factor_time) +
+  aes(
+    x = Year,
+    y = `Number of conversion factors higher than max recorded catches`,
+    colour = species
+  ) +
+  geom_point(shape = "circle", size = 1.5) +
+  scale_color_hue(direction = 1) +
+  theme_minimal() +
+  facet_wrap(vars(source_authority), scales = "free_y")
+```
+
+NB: Each point represents a catch reported in number of fish and tons not only a signle fish reported fished.
+
+The conversion factors too high compare to maximum catch are recent (from 1990) for IATTC and WCPFC. For ICCAT most of them have been recorded between 1980 and 2000. Eventually, for IOTC those factors are evenly distributed, however it seems to have groupping in date by species.
+
+

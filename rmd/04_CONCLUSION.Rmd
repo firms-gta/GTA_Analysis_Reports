@@ -1,0 +1,11 @@
+# Conclusion
+
+Our analysis highlights the importance of accurate and reliable data for the sustainable management of tuna and other highly migratory fish stocks. By identifying and correcting mislocated data we can improve the accuracy of estimates of tuna stock abundance and distribution, and inform more effective management decisions. We encourage the RFMOs and other stakeholders to continue to collaborate on efforts to improve the quality of the data used in fisheries management.
+
+For now different choices can be made: 
+
+- Remove this data from the Global Tuna Atlas level 0 bis
+
+- Reallocate this data on same existing stratas if available. 
+
+However the second proposition will increase data in some areas for some fishingfleet and can lead to political issues. What we recommend is thus to remove this data as it is incorrect.
