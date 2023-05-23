@@ -12,7 +12,7 @@ colnames_to_keep <- c("fishingfleet",         "gear",                 "time_star
                       "geographic_identifier","schooltype",           "species",             # "catchtype",           
                       "unit",                 "value",                "source_authority")
 
-list_pie_chart <- list(setdiff(colnames_to_keep, unlist(list(time_dimension, geographical_dimension, "unit", "value"))))[[1]]
+list_pie_chart <- list(setdiff(colnames_to_keep, unlist(list(time_dimension, geographical_dimension, "unit", "value", "schooltype"))))[[1]]
 
 pie_chart_plotting = function(dimension, first, topn = 4){
   
