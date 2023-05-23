@@ -16,7 +16,12 @@ knitr::opts_chunk$set(echo = FALSE,
                       )
 ```
 
+```{r}
+overlap_iotc_or_iccat <- "IATTC"
+```
 
+```{r child = 'Introduction_overlapping.Rmd'}
+```
 
 ```{r tab.cap = "Summary of total catch reported in the overlapping area between IATTC and WCPFC groupped by spatial resolution, unit and RFMO", tab.id = "CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE"}
 
@@ -202,7 +207,7 @@ cat(unlist(t), sep ="\\clearpage")
 
 list_files <- as.list(list.files(here("outputs/charts/overlapping/IATTC_WCPFC/species_doubled")))
 list_charts_double_decla <- list_files[!str_detect(list_files,"converted")]
-list_charts_double_decla <- list_files[!str_detect(list_files,"single")]
+list_charts_double_decla <- list_files[!str_detect(list_files,"single")&str_detect(list_files,"png")]
 
 
 ```

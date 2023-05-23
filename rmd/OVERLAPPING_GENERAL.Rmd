@@ -47,7 +47,13 @@ To be noted that the only 10x10 grid in the overlapping zone has declaration onl
 
 The data recorded on those grids should be kept as it is recorded, even if it is contained in overlapping zone.
 
+For the remaining of the document we present the overlapping zone between IOTC and WCPFC, IATTC and WCPFC and for the Southern Bluefin Tuna captures.
 
+
+```{r}
+if(!exists('long')){long <- TRUE}
+knitr::knit_exit(fully = long)
+```
 
 
 # Grids double declared in overlapping zones

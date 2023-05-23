@@ -1,1 +1,21 @@
 # Materials
+
+## Data Sources:
+
+We obtained catch data and fishing effort data from the RFMOs responsible for managing the tuna stocks in each of the regions. These data included information on the location of fishing activities, the species caught, the size of the catch, and the effort expended.
+
+## Data Analysis:
+
+We used a combination of statistical techniques and geospatial analysis tools to identify mislocated data and double reporting of data in overlapping zones. First, we plotted the location of the fishing activities reported by each RFMO on a map, and identified any inconsistencies or discrepancies on the reported locations. We then applied statistical models to estimate the extent of mislocation and double reporting in the data, and developed a correction factor to adjust for these errors.
+
+## Ethical Considerations:
+
+This study did not involve the collection of new data from human subjects or animals, and all data used were obtained from publicly available sources. Therefore, ethical approval was not required.
+
+## Limitations:
+
+Our study has several limitations. First, the accuracy of our results depends on the quality and completeness of the data provided by the RFMOs and other sources. Second, our analysis was limited to the regions and time periods covered by the available data. Third, the correction factor we developed may not be applicable to other regions or fisheries with different characteristics.
+
+
+
+

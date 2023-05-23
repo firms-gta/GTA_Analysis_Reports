@@ -67,7 +67,7 @@ include_graphics(paste0(here(),"/outputs/charts/mislocation/time_series_mislocat
 
 ```
 
-The data located on land is higher for last decade, for every tRFMO and for each unit.
+The data located on land is increasing in last decade this issue does not result from old reporting. Instead it is something to raise now to prevent tRFMOs to provide new data on lands for coming data call. 
 
 ### Repartition of factors for data on land
 
@@ -126,6 +126,7 @@ cat(unlist(t), sep ="\\clearpage")
 
 ```
 
+Those catches reported on land mainly concern ICCAT, major tunas species and Spain (in tons) and Seychelles (in number of fish).
 
 ## Catches outside juridiction zone {-}
 

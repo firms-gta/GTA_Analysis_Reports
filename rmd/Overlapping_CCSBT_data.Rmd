@@ -1,0 +1,73 @@
+---
+title: "Overlapping_CCSBT_data"
+date: '2023-05-16'
+---
+
+
+```{r include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      fig.cap = TRUE, 
+                      tab.cap.style = "Table Caption", 
+                      tab.cap.pre = "Tab. ",
+                      tab.cap.sep = ". ", 
+                      fig.cap.style = "Image Caption", 
+                      fig.cap.pre = "Fig. ", 
+                      fig.cap.sep = ". ", 
+                      warning = FALSE
+                      )
+```
+
+
+
+```{r tab.cap = "Summary of total catch reported for Southern Bluefin Tuna", tab.id = "CA_SBF_GRIDTYPE"}
+
+SBF_GRIDTYPE <- read_excel(here("outputs/datasets/CA_SBF_GRIDTYPE.xlsx"))
+
+SBF_GRIDTYPE_FLEXTABLE = 
+  SBF_GRIDTYPE %>% rename(RFMO= source_authority)%>%
+  flextable()  %>% 
+  flextable::font(fontname = "calibri", part = c("all")) %>% 
+  align(part = "header", align = "center") %>% 
+  colformat_double(digits = 0) %>%
+  fontsize(size = 9) %>% 
+  border_inner() %>% 
+  border_outer(border = fp_border(width = 2)) %>% 
+  merge_v(j = c("GRIDTYPE")) %>% 
+  autofit() %>% 
+  fix_border_issues()
+
+SBF_GRIDTYPE_FLEXTABLE
+
+```
+
+
+
+Data from CCSBT is provided with a resolution lower than the two other tRFMOs which are IOTC and ICCAT.
+
+
+
+```{r tab.cap = "Summary of total catch of Southern Bluefin Tuna groupped by tRFMOs", tab.id = "CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_SPECIES"}
+
+
+include_graphics(here("outputs/charts/overlapping/time_plot_captures_of_sbf.png"))
+
+```
+
+
+Before 1965, the CCSBT (Commission for the Conservation of Southern Bluefin Tuna) has no recorded data on SBF (Southern Bluefin Tuna) catches. However, during the same period, the IOTC (Indian Ocean Tuna Commission) has maintained records of these catches. This indicates that relying solely on data from the CCSBT in the Global Tuna Atlas would not be advisable.
+
+
+Moreover, IOTC is providing more data in tons and does provide conversion factors. Thus, the solution to keep data from IOTC could be considered.
+
+
+
+
+```{r tab.cap = "Map of total catch of Southern Bluefin Tuna groupped by tRFMOs", tab.id = "MAP_SBF"}
+
+
+include_graphics(here("outputs/charts/overlapping/map_plot.png"))
+
+```
+
+However, we can see here that most of the declaration are not in the same areas.
+
