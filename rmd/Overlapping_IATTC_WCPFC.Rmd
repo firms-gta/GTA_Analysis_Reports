@@ -1,6 +1,6 @@
 ---
-title: "Overlapping IOTC _ WCPFC"
-date: '2023-05-16'
+title: "Overlapping zone IATTC / WCPFC"
+date: '2023-04-18'
 ---
 
 ```{r include = FALSE}
@@ -17,36 +17,21 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 ```{r}
-overlap_iotc_or_iccat <- "IOTC"
+overlap_iotc_or_iccat <- "IATTC"
 ```
-
 
 ```{r child = 'Introduction_overlapping.Rmd'}
 ```
 
+# Analysis of reported catches on the overlapping area
 
-```{r include = FALSE}
-knitr::opts_chunk$set(echo = FALSE, 
-                      fig.cap = TRUE, 
-                      tab.cap.style = "Table Caption", 
-                      tab.cap.pre = "Tab. ",
-                      tab.cap.sep = ". ", 
-                      fig.cap.style = "Image Caption", 
-                      fig.cap.pre = "Fig. ", 
-                      fig.cap.sep = ". ", 
-                      warning = FALSE
-                      )
-```
+```{r tab.cap = "Summary of total catch reported in the overlapping area between IATTC and WCPFC groupped by spatial resolution, unit and RFMO", tab.id = "CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE"}
+
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE <- read_excel(here("outputs/datasets/CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE.xlsx"))
 
 
-
-```{r tab.cap = "Summary of total catch reported in the overlapping area between IOTC and WCPFC groupped by spatial resolution, unit and RFMO", tab.id = "CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_GRIDTYPE"}
-
-CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_GRIDTYPE <- read_excel(here("outputs/datasets/CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_GRIDTYPE.xlsx"))
-
-
-CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_GRIDTYPE_FLEXTABLE = 
-  CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_GRIDTYPE %>% rename(RFMO= source_authority)%>%
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE_FLEXTABLE = 
+  CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE %>% rename(RFMO= source_authority)%>%
   flextable()  %>% 
   flextable::font(fontname = "calibri", part = c("all")) %>% 
   align(part = "header", align = "center") %>% 
@@ -58,21 +43,21 @@ CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_GRIDTYPE_FLEXTABLE =
   autofit() %>% 
   fix_border_issues()
 
-CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_GRIDTYPE_FLEXTABLE
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_GRIDTYPE_FLEXTABLE
 ```
 
 
-For the following document, we aggregate all the data being in 1 deg square in 5 deg as the data in 1 deg square cannot be compared, is coming only from IOTC and does not represent a huge percentage of the total catches reported in the overlapping area.
-
-# Analysis of reported catches on the overlapping area
-
-```{r tab.cap = "Summary of total catch reported in the overlapping area between IOTC and WCPFC groupped by species, unit and RFMO", tab.id = "CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_SPECIES"}
-
-CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_SPECIES <- read_excel(here("outputs/datasets/CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_SPECIES.xslx"))
+For the following document, we aggregate all the data being in 1 deg square in 5 deg as the data in 1 deg square cannot be compared, is coming only from IATTC and does not represent a huge percentage of the total catches reported in the overlapping area.
 
 
-CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_SPECIES_FLEXTABLE = 
-  CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_SPECIES %>% rename(RFMO= source_authority)%>%
+
+```{r tab.cap = "Summary of total catch reported in the overlapping area between IATTC and WCPFC groupped by species, unit and RFMO", tab.id = "CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES"}
+
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES <- read_excel(here("outputs/datasets/CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES.xslx"))
+
+
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES_FLEXTABLE = 
+  CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES %>% rename(RFMO= source_authority)%>%
   flextable()  %>% 
   flextable::font(fontname = "calibri", part = c("all")) %>% 
   align(part = "header", align = "center") %>% 
@@ -84,10 +69,15 @@ CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_SPECIES_FLEXTABLE =
   autofit() %>% 
   fix_border_issues()
 
-CA_IN_OVERLAPPING_ZONES_IOTC_WCPFC_SUMMARY_SPECIES_FLEXTABLE
+CA_IN_OVERLAPPING_ZONES_IATTC_WCPFC_SUMMARY_SPECIES_FLEXTABLE
 ```
 
-For most of the species, IOTC has bigger records of captures in number of fish and WCPFC in tons. However, for the major tunas, WCPFC has bigger records. 
+For most of the species, IATTC has bigger records of captures in number of fish and WCPFC in tons. However, for the major tunas, WCPFC has bigger records. 
+
+```{r}
+species_unique <- readRDS(here("data/species_unique_doubled_iattc_wpcfc.rds"))$species_unique
+```
+
 
 Eventually, `r length(species_unique)` species have declaration only from one tRFMO in the overlapping zone. For those species : `r species_unique`, it seems to be better to keep all the data. Maps of the distribution for those species can be found in annexe.
 
@@ -135,7 +125,8 @@ resume_knit_child = function(x){
 
 ```{r include = FALSE}
 
-list_files <- as.list(list.files(here("outputs/charts/overlapping/IOTC_WCPFC/species_doubled")))
+list_files <- as.list(list.files(here("outputs/charts/overlapping/IATTC_WCPFC/species_doubled")))
+list_charts_double_decla <- list_files[!str_detect(list_files,"converted")]
 list_charts_double_decla <- list_files[str_detect(list_files,"single")]
 
 
@@ -155,14 +146,13 @@ cat(unlist(t), sep ="\\clearpage")
 
 ```
 
-What can be analyzed from those plots is that most of the grid in the overlapping zone are not coming from the two tRFMOs.  
 
 For the remaining of the analyse, we converted all the data in the same unit (Number of fish to Tons) as it makes it easier to compare the two tRFMOs captures. 
 
 ## Converted data
 
 ```{r}
-list_files_converted <- as.list(list.files(here("outputs/charts/overlapping/IOTC_WCPFC/species_doubled/converted")))
+list_files_converted <- as.list(list.files(here("outputs/charts/overlapping/IATTC_WCPFC/species_doubled/converted")))
 
 
 ```
@@ -182,7 +172,23 @@ cat(unlist(t), sep ="\\clearpage")
 ```
 
 
-What can be learned from those plots is that the captures are similar on the overlapping zone for the two tRFMOs. What we recommend is to keep data from IOTC as there are less captures UNK and for which we have conversion factors provided that allows us to create a Global Tuna Atlas level 1. 
+For this data, WCPFC is almost all the time higher than IATTC data, however the data is initially more in Number of fish than for IATTC. Then it would be better to keep the data from WCPFC, but we should have corresponding conversion factors. 
+
+The only major specie for which IATTC have higher records is SWO but it would be to complicated to make a choice for every species. Moreover, the data is not this different for the two tRFMOs, still it has to be noted that it is not homogeneously reported geographically. 
+
+
+# Conclusion
+
+We propose to keep all the data in overlapping areas for species being declared only by one tRFMO. For the remaining species we propose to keep only WCPFC data. 
+
+
+```{r tab.cap = "Differences between the two possible treatment", tab.id = "DIFFERENCES_TREATMENT_IATTC_WCPFC"}
+
+
+
+```
+
+
 
 
 
@@ -192,7 +198,7 @@ What can be learned from those plots is that the captures are similar on the ove
 
 ```{r}
 
-list_files_converted <- as.list(list.files(here("outputs/charts/overlapping/IOTC_WCPFC/species_unique")))
+list_files_converted <- as.list(list.files(here("outputs/charts/overlapping/IATTC_WCPFC/species_unique")))
 
 ```
 
@@ -216,7 +222,8 @@ cat(unlist(t), sep ="\\clearpage")
 
 ```{r include = FALSE}
 
-list_files <- as.list(list.files(here("outputs/charts/overlapping/IOTC_WCPFC/species_doubled")))
+list_files <- as.list(list.files(here("outputs/charts/overlapping/IATTC_WCPFC/species_doubled")))
+list_charts_double_decla <- list_files[!str_detect(list_files,"converted")]
 list_charts_double_decla <- list_files[!str_detect(list_files,"single")&str_detect(list_files,"png")]
 
 
