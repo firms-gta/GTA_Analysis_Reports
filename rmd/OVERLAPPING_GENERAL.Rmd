@@ -4,8 +4,6 @@ date: '2023-04-18'
 toc: true
 ---
 
-
-
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE, 
                       fig.cap = TRUE, 
@@ -19,7 +17,21 @@ knitr::opts_chunk$set(echo = FALSE,
                       )
 ```
 
-# Grids single declared in overlapping zones
+In the realm of international fisheries management, the sustainable utilization and conservation of marine resources are paramount. To achieve these objectives, several regional fisheries management organizations (RFMOs) have been established worldwide, each tasked with regulating fishing activities in specific regions. The Global Tuna Atlas plays a vital role in harmonizing and integrating data from multiple tRFMOs, providing a comprehensive overview of tuna fisheries worldwide. However, the issue of double counting can still arise despite these efforts. Due to the complex nature of migratory tuna species and their widespread distribution, it is not uncommon for the same individual fish to be reported as catches by different tRFMOs operating within overlapping zones. This double counting can distort the accuracy of catch data and undermine the effectiveness of resource management strategies. As the Global Tuna Atlas aims to consolidate information from various tRFMOs, it becomes essential to address and mitigate the challenges associated with double counting, ensuring that the atlas provides reliable and consistent data for informed decision-making and sustainable tuna fisheries management on a global scale.
+
+An overlapping zone refers to an area where the jurisdictional boundaries of multiple regional fisheries management organizations (tRFMOs) intersect, resulting in shared control over the same fishing grounds. This issue arises due to the nature of migratory fish species that traverse across different jurisdictions during their life cycles. The overlapping zones present a challenge known as double counting, wherein the reported catches of fish within these areas are accounted for by multiple tRFMOs. This double counting can lead to inaccurate assessments of fish stocks, misallocation of quotas, and inadequate management measures. Additionally, conflicting regulations and enforcement practices between tRFMOs can further complicate effective resource management and hinder sustainable fishing practices. Addressing the issue of double counting and promoting collaborative approaches to manage overlapping zones is crucial for ensuring the long-term sustainability of fisheries and the preservation of marine ecosystems.
+
+The overlapping areas between tRFMOs jurisdictions areas are multiple:
+
+-   Overlapping IOTC/WCPFC
+
+-   Overlapping IATTC/WCPFC
+
+-   Overlapping CCSBT and other tRFMOs (as CCSBT does not have a jurisdiction area)
+
+The overlapping between CCSBT and other tRFMOs concerns only one species (Southern Bluefin Tuna) and as a particular case we will present it in another document. We will focus for now on overlapping zones between two jurisdictions areas.
+
+In those overlapping zones, not all the CWP grids actually have catches. We will focus on the grids having at least one catch reported in the time period 1950-2021. (Tbxx)
 
 ```{r CA_IN_OVERLAPPING_ZONES_MAP, fig.cap = "Distribution of catches in overlapping zones", fig.id = "barplot"}
 
@@ -27,15 +39,11 @@ include_graphics(here("outputs/charts/overlapping/CA_IN_OVERLAPPING_ZONES_MAP.pn
 
 ```
 
+A first look at figbarplot shows that this overlapping issue mainly concern the WCPFC/ICCAT and then WCPFC/IOTC overlapping areas and mainly concern 5 deg squares.
 
-```{r CA_GRID_DOUBLE_DECLARATIONS_MAP, fig.cap = "Distribution of grids in overlapping zones having double declarations", fig.id = "barplot"}
+Moreover, we see overlapping grids between ICCAT and IATTC even if the areas are not overlapped because some 5 deg grids touch the two ocean even if cut by the continent. However, we have seen later that both of those tRFMOs report data in the other ocean so we will still analyse briefly this case in section 5
 
-include_graphics(here("outputs/charts/overlapping/CA_GRID_DOUBLE_DECLARATIONS_MAP.png"))
-
-```
-
-Only a few of grids in several juridictions zones have actually declarations for multiple tRFMOs.
-
+Those reported catches in the overlapping areas are however not all allowing double counting. Indeed, on xx grids reported in overlapping zones, % of them have declaration from only one tRFMO (mainly when they are at the border of the jurisdiction area). This means that the jurisdiction area are not effectively used by different tRFMOs and having to choose between data from one tRFMO in the entirety of the overlapping area , as this treatment was handled before, could lead to mistakes in the filtering. Thus, we recommend that the data recorded on those grids should be kept as it is recorded, even if it is contained in overlapping zone.
 
 ```{r fig.cap = "Distribution of grids in overlapping zones having only records from one tRFMO (all 1 deg square aggregated in 5 deg)", fig.id = "barplot"}
 
@@ -43,16 +51,25 @@ include_graphics(here("outputs/charts/overlapping/DATA_IN_OVERLAPPING_ZONE_NOT_W
 
 ```
 
-To be noted that the only 10x10 grid in the overlapping zone has declaration only from one tRFMO. 
+In the following analysis we will focus on grids in overlapping zones having double declarations Fig
 
-The data recorded on those grids should be kept as it is recorded, even if it is contained in overlapping zone.
+```{r CA_GRID_DOUBLE_DECLARATIONS_MAP, fig.cap = "Distribution of grids in overlapping zones having double declarations", fig.id = "barplot"}
 
-For the remaining of the document we present the overlapping zone between IOTC and WCPFC, IATTC and WCPFC and for the Southern Bluefin Tuna captures.
+include_graphics(here("outputs/charts/overlapping/CA_GRID_DOUBLE_DECLARATIONS_MAP.png"))
 
+```
+
+To be noted: The CWP with declaration from two tRFMOs are only 5deg squares grids. However, some 1 deg square declared only by one tRFMOs are included in 5 deg squares grids and thus should be kept in the analysis. To handle those difference in grid types we will later aggregate the 1deg square data in 5 deg square.
+
+Moreover we see that a square not being in two jurisdictions areas is being doubled declared. This comes from the fact that ICCAT is reporting a square outside his jurisdiction zone. The catch data in this grid is presented in section
+
+# Summary of the proposed treatment:
+
+The ancient treatment was removing all the IOTC data in the WCPFC/IOTC area and all the ICCAT/WCPFC area. It was resulting in the loss of xx percent of reported catches in number of fish and xx reported catches in tons. A new treatment removing all the data on the same basis but taking in account only the cwp grids having double declaration would result in a reduction of xx percent of reported catches in number of fish and xx reported catches in tons. 
 
 ```{r}
 if(!exists('long')){long <- TRUE}
-knitr::knit_exit(fully = long)
+knitr::knit_exit(fully = !long)
 ```
 
 
@@ -72,16 +89,12 @@ knitr::knit_exit(fully = long)
 
 # Overlapping with CCSBT data for Southern Bluefin Tuna
 
-
 ```{r child='Overlapping_CCSBT_data.Rmd'}
 
 ```
 
-
 # Summary of the proposed changes on the Global Tuna Atlas 2023
-
 
 ```{r}
 
 ```
-

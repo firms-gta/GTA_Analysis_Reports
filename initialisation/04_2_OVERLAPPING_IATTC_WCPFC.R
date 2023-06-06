@@ -1,8 +1,8 @@
 print('IATTC and WCPFC overlap analyse')
 
 
-CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA <- CA_IN_OVERLAPPING_ZONES_AGGREGATED_5DEG %>%
-  dplyr::filter(declarant_names == "East Pacific ocean, West Pacific ocean") %>% filter(source_authority %in% c("IATTC", "WCPFC"))
+CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA <- CA_GRID_DOUBLE_DECLARATIONS_5_DEG %>%
+  dplyr::filter(declarant_names == "IATTC, WCPFC") %>% filter(source_authority %in% c("IATTC", "WCPFC"))
 
 
 
@@ -25,10 +25,12 @@ CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP <-
 
 species_unique  <- (CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY %>% group_by(species) %>% 
                       summarise(count = n_distinct(source_authority)) %>% filter(count <2))$species
-saveRDS(species_unique,"species_unique.Rds")
 
 species_doubled  <- (CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY %>% group_by(species) %>% 
                       summarise(count = n_distinct(source_authority)) %>% filter(count ==2))$species
+
+saveRDS(list(species_unique =species_unique, species_doubled = species_doubled), "data/species_unique_doubled_iattc_wpcfc.rds")
+
 
 
 CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP_CLEANED <- CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID_IATTC_WCPFC_DATA_SUMMARY_COMP %>% 

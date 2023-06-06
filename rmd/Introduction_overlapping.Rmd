@@ -18,8 +18,6 @@ overlap_iotc_or_iccat_complete_name <- "Indian Ocean Tuna Commission (IOTC)"
 
 # Introduction 
 
-In the realm of international fisheries management, the sustainable utilization and conservation of marine resources are paramount. To achieve these objectives, several regional fisheries management organizations (RFMOs) have been established worldwide, each tasked with regulating fishing activities in specific regions. Among these RFMOs, the `r overlap_iotc_or_iccat_complete_name` and the Western and Central Pacific Fisheries Commission (WCPFC) and the  play crucial roles in governing fishing operations in their respective regions.
-
 The overlapping zone between the `r overlap_iotc_or_iccat` and WCPFC jurisdictions poses a challenge in terms of fisheries management and catch reporting. This zone encompasses areas where the territories of these two RFMOs intersect, creating a complex regulatory landscape. It is within this intersection that the potential for double reporting of catches arises, leading to issues of data accuracy, accountability, and compliance.
 
 This analysis aims to explore the overlapping zone between `r overlap_iotc_or_iccat` and WCPFC and investigate the occurrence of double reporting of catches. By leveraging available data and employing statistical methods, we will assess the extent of overlap and analyze the implications of double reporting on the accuracy of catch data. This analysis will contribute to a better understanding of the challenges associated with managing fisheries in the overlapping zone and help identify potential strategies for improving catch reporting mechanisms.
@@ -30,4 +28,7 @@ The following document presents the results of the analysis of the data on the o
 
 It is important to acknowledge that this analysis is based on available data up to 2021 resulting from Global Tuna Atlas 2023 update. Any recent developments or policy changes beyond this date may not be accounted for in the findings. However, the insights gained from this analysis can still provide valuable perspectives and serve as a foundation for further research and policy discussions.
 
-Note: The following document focuses only on the following species `r fish_species` as most important in the fisheries and under the juridictions of the tRMFOs. Regarding the species kept the results may vary significantly. 
+
+<!-- Note: The following document focuses only on the following species `r fish_species` as most important in the fisheries and under the juridictions of the tRMFOs. Regarding the species kept the results may vary significantly. -->
+
+

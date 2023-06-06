@@ -2,7 +2,12 @@
 # Checking all the square having declarations for more than one tRFMO
 
 CA_RAW <- readRDS(here("inputs/data/mapped_codelist.rds"))  %>% 
-  dplyr::mutate(unit = case_when(unit %in% c("MT","MTNO","t")~ "MT", unit %in% c( "NOMT", "NO", "no")~"NO")) %>% filter(species %in% cwp_codes)
+  dplyr::mutate(unit = case_when(unit %in% c("MT","MTNO","t")~ "MT", unit %in% c( "NOMT", "NO", "no")~"NO"))
+
+if(filter_species){
+  CA_RAW <- CA_RAW %>% filter(species %in% cwp_codes)
+}
+  
 
 
 overlapping_declarations <- as.data.frame(CA_RAW) %>% filter(source_authority != "CCSBT") %>% 
@@ -54,6 +59,8 @@ ggsave(filename=here("outputs/charts/overlapping/CA_IN_OVERLAPPING_ZONES_MAP.png
 
 CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID <- CA_GRID_DOUBLE_DECLARATIONS_ALLOWED %>% inner_join(CWP_GRIDS, by = c("geographic_identifier" = "CWP_CODE")) %>% 
   group_by(geographic_identifier, GRIDTYPE, the_geom) %>% summarise(value = sum(value))
+
+double_declared_cwp <- unique(CA_GRID_DOUBLE_DECLARATIONS_GROUPPED_GRID$geoographic_identifier)
 
 CA_GRID_DOUBLE_DECLARATIONS_MAP <- ggplot() + 
   geom_sf(data = COUNTRIES_SF, size = .2, fill = "darkgrey", col = NA) + 

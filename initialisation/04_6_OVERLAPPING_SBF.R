@@ -54,15 +54,15 @@ ggsave(here("outputs/charts/overlapping/time_plot_captures_of_sbf.png"),plot, wi
 
 
 CA_SBF_GRIDTYPE_SUMMARY_COMP <- 
-  converted_overlapping_SBF %>%
+  converted_overlapping_SBF %>% 
+  group_by(unit, geographic_identifier, the_geom, GRIDTYPE, source_authority) %>% summarise(value = sum(value))%>%
   pivot_wider(names_from = "source_authority", values_from = "value") %>% 
   mutate(IOTC = ifelse(is.na(IOTC), 0, IOTC)) %>% 
   mutate(ICCAT = ifelse(is.na(ICCAT), 0, ICCAT)) %>% 
   mutate(CCSBT = ifelse(is.na(CCSBT), 0, CCSBT)) %>% 
-  mutate(Double = as.factor(case_when( IOTC==0 & ICCAT == 0 ~ "CCSBT", CCSBT!=0 & (ICCAT != 0 | IOTC != 0 ) ~ "CCSBT and Other", TRUE ~ "Other")))
+  mutate(Double = as.factor(case_when( IOTC==0 & ICCAT == 0 & CCSBT != 0 ~ "CCSBT", CCSBT!=0 & (ICCAT != 0 | IOTC != 0 ) ~ "CCSBT and Other", CCSBT==0 & (ICCAT != 0 | IOTC != 0 ) ~ "Other", TRUE ~ "NA")))
 
-CA_SBF_GRIDTYPE_SUMMARY_COMP_GRID <- CA_SBF_GRIDTYPE_SUMMARY_COMP %>% pivot_longer(cols = c(IOTC, ICCAT, CCSBT), names_to = "source_authority", values_to = "value") %>%distinct() %>% 
-  group_by(Double, unit, geographic_identifier, the_geom, GRIDTYPE) %>% summarise(value = sum(value))
+CA_SBF_GRIDTYPE_SUMMARY_COMP_GRID <- CA_SBF_GRIDTYPE_SUMMARY_COMP %>% pivot_longer(cols = c(IOTC, ICCAT, CCSBT), names_to = "source_authority", values_to = "value") %>%distinct() 
 
 CA_SBF_GRIDTYPE_SUMMARY_COMP_GRID_grid <- CA_SBF_GRIDTYPE_SUMMARY_COMP_GRID %>% group_by(unit, Double) %>% summarise(value =sum(value))
 
